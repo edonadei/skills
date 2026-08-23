@@ -1,7 +1,5 @@
 # Skills For Your Skills
 
-[![skills.sh](https://skills.sh/b/edonadei/skills)](https://skills.sh/edonadei/skills)
-
 Your agent is carrying dozens of installed skills right now. Almost none of them
 run. All of them cost context on every turn, and nothing on your machine will
 tell you which ones are dead.
