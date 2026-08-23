@@ -6,18 +6,25 @@ tokens on every message you send.
 This audits every installed skill, tells you which ones are dead and why they
 are dead, then archives whatever you confirm. It never deletes anything.
 
-## Use it
+## Install
 
-Install the pack, then ask your agent:
-
-```text
-Which of my skills do I actually use?
+```bash
+npx skills@latest add edonadei/skills
 ```
 
-Or run the audit yourself:
+Or run the script straight from a clone. It has no dependencies beyond Node, and
+it only reads.
 
 ```bash
 node scripts/audit.mjs
+```
+
+## Use it
+
+Ask your agent:
+
+```text
+Which of my skills do I actually use?
 ```
 
 ```
