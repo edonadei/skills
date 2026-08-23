@@ -9,6 +9,9 @@ import path from 'node:path';
 import os from 'node:os';
 
 const HOME = os.homedir();
+// The audit is about the machine, not a project, so its output lives in a fixed
+// place. A CWD-relative dir lands wherever the agent happened to be standing.
+const OUTDIR = process.env.SKILL_AUDIT_DIR ?? path.join(HOME, '.skill-audit');
 const MIN_AGE_DAYS = 14;          // eligibility: below this, too new to judge
 const CHAIN_WINDOW = 25;          // records after a summon that count as chained
 const CHARS_PER_TOKEN = 4;        // rough, and reported as approximate
@@ -92,8 +95,14 @@ function collectSkills() {
         installedAtMs: lst.birthtimeMs || lst.mtimeMs,
         description: fm.description,
         summonOnly: fm.summonOnly,
-        // what a listing entry costs the context window, approximately
+        // What a listing entry would cost, approximately.
         tokens: Math.round(`- ${name}: ${fm.description}`.length / CHARS_PER_TOKEN),
+        // Summon-only skills are mostly absent from the agent's context: on the
+        // machines observed, 23 of 26 never appeared in a listing. So they are
+        // clutter in the slash menu, not rent on the context window, and their
+        // descriptions must not be counted as reclaimable. A few do leak
+        // through; see references/evidence.md → What presence means.
+        costsContext: !fm.summonOnly,
       });
     }
   }
@@ -192,7 +201,7 @@ function verdict(skill, up, inv, usageUsable) {
 
   if (skill.summonOnly && total === 0)
     return { reason: 'never-summoned', tier: TIER.neverSummoned,
-             evidence: `cannot activate, and never typed in ${age} days` };
+             evidence: `cannot activate, never typed in ${age} days; clutter, not context cost` };
 
   if (total === 0)
     return { reason: 'untouched', tier: TIER.untouched,
@@ -227,29 +236,36 @@ const audit = {
   usage: { usable: usageUsable, transcriptFiles: files, records, historyDays },
   totals: {
     skills: rows.length,
-    tokensPerMessage: rows.reduce((a, r) => a + r.tokens, 0),
+    // Only skills that actually reach the agent's context are billed.
+    tokensPerMessage: rows.reduce((a, r) => a + (r.costsContext ? r.tokens : 0), 0),
     flagged: flagged.length,
-    reclaimableTokens: flagged.reduce((a, r) => a + r.tokens, 0),
+    reclaimableTokens: flagged.reduce((a, r) => a + (r.costsContext ? r.tokens : 0), 0),
+    clutterSkills: flagged.filter(r => !r.costsContext).length,
+    uncountedTokens: rows.reduce((a, r) => a + (r.costsContext ? 0 : r.tokens), 0),
   },
   skills: rows,
 };
 
-fs.mkdirSync('.cleanup', { recursive: true });
-fs.writeFileSync('.cleanup/audit.json', JSON.stringify(audit, null, 2));
+fs.mkdirSync(OUTDIR, { recursive: true });
+const AUDIT_PATH = path.join(OUTDIR, 'audit.json');
+fs.writeFileSync(AUDIT_PATH, JSON.stringify(audit, null, 2));
 
 if (process.argv.includes('--json')) {
   console.log(JSON.stringify(audit.totals, null, 2));
 } else {
   const t = audit.totals;
   console.log(`${t.skills} skills, ~${t.tokensPerMessage} tokens on every message`);
+  if (t.uncountedTokens)
+    console.log(`(~${t.uncountedTokens} more in summon-only descriptions, which mostly never reach context)`);
   if (!usageUsable) console.log('no usable transcripts: usage-based reasons are OFF this run');
   else console.log(`${files} transcript files, ${records} records, ${historyDays} days of history`);
   for (const tier of ['provable', 'strong', 'circumstantial']) {
     const g = flagged.filter(r => r.tier === tier);
     if (!g.length) continue;
-    console.log(`\n${tier} — ${g.length} skills, ~${g.reduce((a, r) => a + r.tokens, 0)} tokens`);
+    const billed = g.reduce((a, r) => a + (r.costsContext ? r.tokens : 0), 0);
+    console.log(`\n${tier} — ${g.length} skills, ~${billed} tokens`);
     for (const r of g.sort((a, b) => b.tokens - a.tokens))
-      console.log(`   ${String(r.tokens).padStart(4)}  ${r.name.padEnd(30)} ${r.evidence}`);
+      console.log(`   ${(r.costsContext ? String(r.tokens) : '   ·').padStart(4)}  ${r.name.padEnd(30)} ${r.evidence}`);
   }
-  console.log('\nwrote .cleanup/audit.json');
+  console.log(`\nwrote ${AUDIT_PATH}`);
 }

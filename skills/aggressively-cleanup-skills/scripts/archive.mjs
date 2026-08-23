@@ -13,8 +13,9 @@ import path from 'node:path';
 import os from 'node:os';
 
 const HOME = os.homedir();
-const AUDIT = '.cleanup/audit.json';
-const KEEPLIST = '.cleanup/keep-list.json';
+const OUTDIR = process.env.SKILL_AUDIT_DIR ?? path.join(os.homedir(), '.skill-audit');
+const AUDIT = path.join(OUTDIR, 'audit.json');
+const KEEPLIST = path.join(OUTDIR, 'keep-list.json');
 
 const argv = process.argv.slice(2);
 const flag = name => argv.filter((a, i) => argv[i - 1] === `--${name}`);
@@ -35,7 +36,7 @@ const keepList = fs.existsSync(KEEPLIST)
 const declines = flag('keep');
 if (declines.length) {
   for (const name of declines) keepList.declined[name] = new Date().toISOString();
-  fs.mkdirSync('.cleanup', { recursive: true });
+  fs.mkdirSync(OUTDIR, { recursive: true });
   fs.writeFileSync(KEEPLIST, JSON.stringify(keepList, null, 2));
   console.log(`kept: ${declines.join(', ')}`);
   if (!flag('tier').length && !flag('skill').length) process.exit(0);

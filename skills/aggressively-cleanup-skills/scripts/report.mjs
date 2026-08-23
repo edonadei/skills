@@ -4,9 +4,12 @@
 // Zero dependencies. See references/evidence.md for what the evidence means.
 
 import fs from 'node:fs';
+import path from 'node:path';
+import os from 'node:os';
 
-const AUDIT = '.cleanup/audit.json';
-const OUT = '.cleanup/report.html';
+const OUTDIR = process.env.SKILL_AUDIT_DIR ?? path.join(os.homedir(), '.skill-audit');
+const AUDIT = path.join(OUTDIR, 'audit.json');
+const OUT = path.join(OUTDIR, 'report.html');
 
 if (!fs.existsSync(AUDIT)) {
   console.error(`no ${AUDIT}. Run: node scripts/audit.mjs`);
@@ -40,14 +43,17 @@ const tierSections = TIERS.map(([tier, blurb]) => {
   const rows = flagged.filter(s => s.tier === tier)
     .sort((x, y) => y.tokens - x.tokens);
   if (!rows.length) return '';
-  const sum = rows.reduce((t, s) => t + s.tokens, 0);
+  const sum = rows.reduce((t, s) => t + (s.costsContext ? s.tokens : 0), 0);
+  const clutter = rows.filter(s => !s.costsContext).length;
   return `<section>
-  <h2>${tier} <span class="muted">${rows.length} skills, ~${sum} tokens/message</span></h2>
+  <h2>${tier} <span class="muted">${rows.length} skills, ~${sum} tokens/message${
+    clutter ? ` (${clutter} cost nothing)` : ''}</span></h2>
   <p class="blurb">${blurb}</p>
   <table><thead><tr><th>Skill</th><th>Why</th><th class="n">Tokens</th></tr></thead><tbody>
   ${rows.map(s => `<tr><td><code>${esc(s.name)}</code>${s.removable ? '' :
       ` <span class="tag">${esc(s.rootKind)}</span>`}</td><td>${esc(s.evidence)}</td>
-      <td class="n">${s.tokens}</td></tr>`).join('')}
+      <td class="n">${s.costsContext ? s.tokens
+        : '<span class="free" title="never reaches the agent&#39;s context">clutter</span>'}</td></tr>`).join('')}
   </tbody></table>
 </section>`;
 }).join('');
@@ -88,12 +94,16 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 code{background:#eef2f7;padding:1px 5px;border-radius:3px;font-size:13px}
 .tag{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--warn);
 border:1px solid var(--warn);border-radius:2px;padding:1px 5px}
+.free{color:var(--muted);font-size:12px;font-variant-numeric:normal}
 .note{margin-top:26px;font-size:12.5px;line-height:1.55;color:var(--muted)}
 </style>
 <div class="card">
 <h1>${a.totals.skills} skills cost you <em>~${a.totals.tokensPerMessage}</em> tokens on every message. <em>${a.totals.flagged}</em> of them look dead.</h1>
 <p class="sub">Every verdict below names one reason and shows its evidence.
-Archiving is reversible and nothing is ever deleted.</p>
+Archiving is reversible and nothing is ever deleted.${a.totals.clutterSkills
+  ? ` ${a.totals.clutterSkills} of them are marked <em>clutter</em>: summon-only skills that
+      never reach the agent's context, so removing them tidies your slash menu
+      rather than saving tokens.` : ''}</p>
 
 <div class="bar">
   <div class="waste" style="flex:${a.totals.reclaimableTokens || 1}"></div>
@@ -116,7 +126,9 @@ ${a.usage.usable
   ? `Usage measured across ${a.usage.transcriptFiles} transcript files, ${a.usage.records} records, ${a.usage.historyDays} days of history.`
   : `<strong>No usable transcripts were found, so every usage-based reason is switched off for this run.</strong> Only metadata reasons appear above.`}
 ${tooNew.length ? ` ${tooNew.length} skills are newer than the minimum age and were not judged on usage.` : ''}
-Token counts are estimated at four characters per token and cover descriptions only.
+Token counts are estimated at four characters per token and cover descriptions
+only. A further ~${a.totals.uncountedTokens} tokens sit in summon-only descriptions and are
+excluded, because those mostly never reach the agent's context.
 Generated ${esc(a.generatedAt)}.
 </p>
 </div>`;

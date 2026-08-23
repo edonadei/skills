@@ -17,7 +17,9 @@ node scripts/audit.mjs --json
 
 It walks every skills root it can find, reads frontmatter, reads the installer
 lock file, counts invocations from session transcripts, and prices each
-description in tokens. It writes `.cleanup/audit.json` and prints a summary.
+description in tokens. It writes `~/.skill-audit/audit.json` and prints a summary. Output always goes
+there, never to the working directory, because the audit is about the machine
+rather than whatever project you happen to be standing in.
 
 Read [`references/evidence.md`](references/evidence.md) when the script reports
 a root or transcript format it could not parse, or when the user asks how a
@@ -39,9 +41,14 @@ or an explicit reason it was not judged.
 node scripts/report.mjs
 ```
 
-Writes `.cleanup/report.html`: the token-cost split and the fired-versus-never
-grid at the top, then the verdicts grouped by tier, each showing its reason and
-raw evidence.
+Writes `~/.skill-audit/report.html`: the token-cost split and the
+fired-versus-never grid at the top, then the verdicts grouped by tier, each
+showing its reason and raw evidence.
+
+Summon-only skills are shown as **clutter** rather than a token figure. They
+mostly never reach the agent's context, so removing them tidies the slash menu
+instead of saving tokens. Say that plainly when offering them: a user who
+archives twenty of them and sees no token change will not trust the next run.
 
 Offer to publish it as an artifact so the user can share it. Fall back to the
 local path.
