@@ -31,7 +31,7 @@ const TIERS = [
   ['provable', 'Your machine can prove these.'],
   ['strong', 'There is enough history behind these to trust them.'],
   ['circumstantial', 'Worth a look before you act on them.'],
-  ['clutter', 'Just as dead, but they never reach the agent, so clearing them only shortens your slash menu.'],
+  ['clutter', 'These only run when you type their name, so the agent never loads them and they cost nothing to keep. Just as dead as the rest, but clearing them shortens your menu, not your bill.'],
 ];
 
 const cells = a.skills.map(s => {
@@ -48,7 +48,7 @@ const tierSections = TIERS.map(([tier, blurb]) => {
   const clutter = rows.filter(s => !s.costsContext).length;
   return `<section>
   <h2>${tier} <span class="muted">${rows.length} skills, ~${sum} tokens/message${
-    clutter ? ` (${clutter} cost nothing)` : ''}</span></h2>
+    clutter && clutter < rows.length ? ` (${clutter} cost nothing)` : ''}</span></h2>
   <p class="blurb">${blurb}</p>
   <table><thead><tr><th>Skill</th><th>Why</th><th class="n">Tokens</th></tr></thead><tbody>
   ${rows.map(s => `<tr><td><code>${esc(s.name)}</code>${s.removable ? '' :
