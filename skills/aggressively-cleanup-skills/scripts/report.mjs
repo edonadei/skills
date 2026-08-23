@@ -28,10 +28,10 @@ const tooNew = a.skills.filter(s => s.tooNew);
 const keptTokens = a.totals.tokensPerMessage - a.totals.reclaimableTokens;
 
 const TIERS = [
-  ['provable', 'The machine states these as fact.'],
-  ['strong', 'Measured over enough history to mean something.'],
-  ['circumstantial', 'A judgement call. Check these yourself.'],
-  ['clutter', 'Proven dead, but they never reach the agent\'s context. Removing them tidies your slash menu and saves no tokens.'],
+  ['provable', 'Your machine can prove these.'],
+  ['strong', 'There is enough history behind these to trust them.'],
+  ['circumstantial', 'Worth a look before you act on them.'],
+  ['clutter', 'Just as dead, but they never reach the agent, so clearing them only shortens your slash menu.'],
 ];
 
 const cells = a.skills.map(s => {
@@ -58,6 +58,25 @@ const tierSections = TIERS.map(([tier, blurb]) => {
   </tbody></table>
 </section>`;
 }).join('');
+
+const usedRows = fired
+  .map(s => ({ ...s, total: s.invocations.summoned + s.invocations.chained + s.invocations.autonomous }))
+  .sort((x, y) => y.total - x.total);
+const usedTokens = usedRows.reduce((t, s) => t + (s.costsContext ? s.tokens : 0), 0);
+
+const usedSection = usedRows.length ? `<section>
+  <h2>What you actually use <span class="muted">${usedRows.length} skills, ~${usedTokens} tokens/message</span></h2>
+  <p class="blurb">The ones earning their keep, and how they get reached.</p>
+  <table><thead><tr><th>Skill</th><th class="n">Ran</th><th class="n">You typed it</th>
+  <th class="n">Called by another skill</th><th class="n">Chose itself</th><th class="n">Tokens</th></tr></thead><tbody>
+  ${usedRows.map(s => `<tr><td><code>${esc(s.name)}</code></td>
+    <td class="n"><strong>${s.total}</strong></td>
+    <td class="n">${s.invocations.summoned || '·'}</td>
+    <td class="n">${s.invocations.chained || '·'}</td>
+    <td class="n">${s.invocations.autonomous || '·'}</td>
+    <td class="n">${s.costsContext ? s.tokens : '<span class="free">clutter</span>'}</td></tr>`).join('')}
+  </tbody></table>
+</section>` : '';
 
 const html = `<title>Skill audit</title>
 <style>
@@ -100,36 +119,36 @@ border:1px solid var(--warn);border-radius:2px;padding:1px 5px}
 </style>
 <div class="card">
 <h1>${a.totals.skills} skills cost you <em>~${a.totals.tokensPerMessage}</em> tokens on every message. <em>${a.totals.flagged}</em> of them look dead.</h1>
-<p class="sub">Every verdict below names one reason and shows its evidence.
-Archiving is reversible and nothing is ever deleted.${a.totals.clutterSkills
-  ? ` ${a.totals.clutterSkills} of them are marked <em>clutter</em>: summon-only skills that
-      never reach the agent's context, so removing them tidies your slash menu
-      rather than saving tokens.` : ''}</p>
+<p class="sub">Each one below says why, and shows what that judgement rests on.
+Archiving puts a skill somewhere you can get it back from. ${a.totals.clutterSkills
+  ? `${a.totals.clutterSkills} are marked <em>clutter</em>, meaning they never reach the agent
+     at all. Clearing those shortens your slash menu. Your token bill stays where it is.` : ''}</p>
 
 <div class="bar">
   <div class="waste" style="flex:${a.totals.reclaimableTokens || 1}"></div>
   <div class="keep" style="flex:${keptTokens || 1}"></div>
 </div>
 <div class="axis">
-  <div style="flex:${a.totals.reclaimableTokens || 1}"><b>~${a.totals.reclaimableTokens}</b>reclaimable</div>
-  <div style="flex:${keptTokens || 1}"><b>~${keptTokens}</b>earning their place</div>
+  <div style="flex:${a.totals.reclaimableTokens || 1}"><b>~${a.totals.reclaimableTokens}</b>you could get back</div>
+  <div style="flex:${keptTokens || 1}"><b>~${keptTokens}</b>the rest</div>
 </div>
 
 <div class="grid">${cells}</div>
-<p class="legend">One dot per skill. Filled means it has been invoked at least
-once (${fired.length} of ${a.totals.skills}). Hollow means never. Faint means it
-cannot activate at all.</p>
+<p class="legend">One dot per skill. Filled ones have run at least once, which is
+${fired.length} out of ${a.totals.skills}. Hollow ones never have, and the faintest
+ones cannot run on their own at all.</p>
 
 ${tierSections || '<section><h2>Nothing flagged</h2><p class="blurb">No skill met any removal reason.</p></section>'}
+${usedSection}
 
 <p class="note">
 ${a.usage.usable
   ? `Usage measured across ${a.usage.transcriptFiles} transcript files, ${a.usage.records} records, ${a.usage.historyDays} days of history.`
   : `<strong>No usable transcripts were found, so every usage-based reason is switched off for this run.</strong> Only metadata reasons appear above.`}
 ${tooNew.length ? ` ${tooNew.length} skills are newer than the minimum age and were not judged on usage.` : ''}
-Token counts are estimated at four characters per token and cover descriptions
-only. A further ~${a.totals.uncountedTokens} tokens sit in summon-only descriptions and are
-excluded, because those mostly never reach the agent's context.
+Token counts are rough, worked out at four characters each, and they cover
+descriptions rather than whole skill bodies. Another ~${a.totals.uncountedTokens} tokens sit in
+summon-only descriptions, left out here because those rarely reach the agent.
 Generated ${esc(a.generatedAt)}.
 </p>
 </div>`;
