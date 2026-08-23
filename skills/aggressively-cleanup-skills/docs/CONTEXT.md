@@ -62,11 +62,17 @@ what a person deletes blindly.
 How strong a [[reason]]'s evidence is. Aggression belongs in how *widely* the
 tool looks, never in how confidently it asserts.
 
-- **Provable** — the machine states it as fact (reasons 1, 3, 6).
+- **Provable** — the machine states it as fact (reasons 1, 6).
 - **Strong** — measured over adequate history (reasons 2, 5).
 - **Circumstantial** — a judgement call the human should check (reason 4).
+- **Clutter** — proven as hard as provable, but the skill never reaches the
+  agent's context, so removing it shortens the slash menu and saves no tokens
+  (reason 3).
 
-Only **provable** is pre-selected for removal.
+Only **provable** is pre-selected for removal. Clutter grades *payoff* where the
+other three grade *evidence*, which is why it sits apart rather than inside
+provable: a bucket whose removals change no number belongs where nobody expects
+one.
 
 ## Eligibility
 

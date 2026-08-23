@@ -179,8 +179,12 @@ function countInvocations() {
 
 // --- verdicts ----------------------------------------------------------------
 
-const TIER = { retired: 'provable', neverSummoned: 'provable', undescribed: 'provable',
-               untouched: 'strong', invisible: 'strong', duplicate: 'circumstantial' };
+// Three tiers grade *evidence*. 'clutter' is the fourth and grades *payoff*:
+// the proof is just as hard, but removing these tidies the slash menu instead of
+// reclaiming tokens, so they are never pre-selected.
+const TIER = { retired: 'provable', undescribed: 'provable',
+               untouched: 'strong', invisible: 'strong',
+               duplicate: 'circumstantial', neverSummoned: 'clutter' };
 
 function verdict(skill, up, inv, usageUsable) {
   const total = inv ? inv.summoned + inv.chained + inv.autonomous : 0;
@@ -259,7 +263,7 @@ if (process.argv.includes('--json')) {
     console.log(`(~${t.uncountedTokens} more in summon-only descriptions, which mostly never reach context)`);
   if (!usageUsable) console.log('no usable transcripts: usage-based reasons are OFF this run');
   else console.log(`${files} transcript files, ${records} records, ${historyDays} days of history`);
-  for (const tier of ['provable', 'strong', 'circumstantial']) {
+  for (const tier of ['provable', 'strong', 'circumstantial', 'clutter']) {
     const g = flagged.filter(r => r.tier === tier);
     if (!g.length) continue;
     const billed = g.reduce((a, r) => a + (r.costsContext ? r.tokens : 0), 0);

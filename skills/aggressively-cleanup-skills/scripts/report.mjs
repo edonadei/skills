@@ -31,6 +31,7 @@ const TIERS = [
   ['provable', 'The machine states these as fact.'],
   ['strong', 'Measured over enough history to mean something.'],
   ['circumstantial', 'A judgement call. Check these yourself.'],
+  ['clutter', 'Proven dead, but they never reach the agent\'s context. Removing them tidies your slash menu and saves no tokens.'],
 ];
 
 const cells = a.skills.map(s => {

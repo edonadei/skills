@@ -53,8 +53,12 @@ archives twenty of them and sees no token change will not trust the next run.
 Offer to publish it as an artifact so the user can share it. Fall back to the
 local path.
 
-Then ask which tiers to remove. **Provable** is pre-selected; **strong** and
-**circumstantial** are not. Name the count and the token saving for each tier in
+Then ask which tiers to remove. **Provable** is pre-selected. **Strong**,
+**circumstantial** and **clutter** are not.
+
+Clutter is its own bucket for a reason: the proof is as strong as provable, but
+the payoff is a shorter slash menu rather than tokens. Offer it separately and
+say so, or a user will archive twenty skills and wonder why nothing changed. Name the count and the token saving for each tier in
 one line each, and wait.
 
 Done when the user has answered.
