@@ -1,0 +1,162 @@
+<!doctype html>
+<!--
+  Infographic template for X (1080x1350 default). Light, neutral theme: serif claim-title,
+  one-line metric subtitle, vertical bars with values on top, dashed gridlines.
+  Default card = title + subtitle + .chart + provenance (+ short caveat) + footer.
+  Optional layouts via the class on .card: layout-chart (default) | layout-stat | layout-list | layout-compare.
+  Replace the SAMPLE text — it is illustrative, not fact-checked.
+
+  Chart API (unchanged):
+    <section class="chart" [data-max="100"]>
+      <div class="bar hi" data-value="56" data-label="56%"><span class="name">Label</span></div>
+      ...
+  - data-value: raw number (bar height is value / max). data-label: text shown above the bar.
+  - class "hi": the one bar the post is about (charcoal); others are context (gray).
+  - empty data-value: a missing data point ("not reported") — no bar, muted label.
+  - data-max on .chart: fixed scale (use 100 for percentages); default is the largest value.
+  - data-unit on .chart (with data-max): labels the gridlines, e.g. data-max="100" data-unit="%".
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Chart card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --frame: #e4e4e7;       /* card border */
+    --ink: #18181b;         /* titles, values */
+    --ink-2: #3f3f46;       /* labels */
+    --muted: #71717a;       /* subtitle, provenance */
+    --grid: #e4e4e7;        /* dashed gridlines */
+    --hi: #18181b;          /* the bar the post is about */
+    --bar: #8e8e96;         /* context bars */
+    --accent: #6d4aff;      /* the small square before the title */
+    --warn: #9a6700;        /* caveat text */
+    --w: 1080px;
+    --h: 1350px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: var(--w); height: var(--h); background: #f4f4f5; }
+  body { font-family: Inter, system-ui, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+
+  .card { position: absolute; inset: 32px; background: var(--bg); border: 2px solid var(--frame); border-radius: 20px;
+          padding: 72px 72px 48px; display: flex; flex-direction: column; }
+  h1 { font-family: Newsreader, Georgia, serif; font-weight: 500; font-size: 68px; line-height: 1.08; letter-spacing: -0.01em; }
+  h1::before { content: ""; display: inline-block; width: 30px; height: 30px; background: var(--accent);
+               margin-right: 22px; vertical-align: 0.08em; }
+  .subtitle { margin-top: 20px; font-size: 28px; line-height: 1.4; color: var(--muted); }
+  .body { flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 0; }
+
+  /* ---- vertical bar chart ---- */
+  .chart { display: block; }
+  .plot { position: relative; height: 560px; display: flex; align-items: flex-end; justify-content: space-around;
+          gap: 24px; padding: 0 12px; border-bottom: 2px solid var(--ink-2); }
+  .gridline { position: absolute; left: 0; right: 0; border-top: 2px dashed var(--grid); }
+  .gridline span { position: absolute; right: 0; bottom: 4px; font-size: 20px; color: var(--muted); }
+  .col { position: relative; z-index: 1; flex: 1; max-width: 170px; height: 100%; display: flex; flex-direction: column;
+         justify-content: flex-end; align-items: center; }
+  .col .val { font-size: 32px; font-weight: 600; color: var(--ink); margin-bottom: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .col .fill { width: 64%; background: var(--bar); border-radius: 6px 6px 0 0; min-height: 4px; }
+  .col.hi .fill { background: var(--hi); }
+  .col .val.missing { font-weight: 400; font-style: italic; color: var(--muted); font-size: 28px; margin-bottom: 18px; }
+  .names { display: flex; justify-content: space-around; gap: 24px; padding: 18px 12px 0; }
+  .names span { flex: 1; max-width: 170px; text-align: center; font-size: 26px; line-height: 1.25; color: var(--ink-2); }
+  .names span.hi { color: var(--ink); font-weight: 600; }
+  .chart .bar { display: none; } /* source rows; rendered into .plot by the script */
+
+  .provenance { margin-top: 36px; font-size: 22px; line-height: 1.45; color: var(--muted); }
+  .caveat { margin-top: 12px; font-size: 24px; line-height: 1.4; color: var(--warn); }
+
+  /* ---- optional layouts ---- */
+  .stat, .list, .compare { display: none; }
+  .layout-stat .stat, .layout-list .list { display: block; }
+  .layout-compare .compare { display: grid; }
+  .big { font-family: Newsreader, Georgia, serif; font-size: 220px; line-height: 1; color: var(--ink); }
+  .big-label { font-size: 40px; line-height: 1.3; margin-top: 16px; font-weight: 500; }
+  .list ol { list-style: none; counter-reset: n; }
+  .list li { counter-increment: n; display: grid; grid-template-columns: 64px 1fr; gap: 16px; padding: 26px 0; border-top: 2px solid var(--frame); }
+  .list li:first-child { border-top: 0; }
+  .list li::before { content: counter(n); font: 500 40px/1 Newsreader, serif; color: var(--muted); }
+  .list b { display: block; font-size: 36px; line-height: 1.25; font-weight: 600; }
+  .list span { display: block; margin-top: 6px; font-size: 28px; line-height: 1.35; color: var(--muted); }
+  .compare { grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 40px; }
+  .compare .pane { border: 2px solid var(--frame); border-radius: 16px; padding: 32px; }
+  .compare h2 { font-size: 24px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+  .compare p { margin-top: 16px; font-size: 32px; line-height: 1.35; }
+
+  footer { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; padding-top: 24px;
+           border-top: 2px solid var(--frame); font-size: 22px; line-height: 1.4; color: var(--muted); }
+  footer .handle { color: var(--ink); font-weight: 600; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="card layout-chart">
+  <h1>SAMPLE: the claim this chart proves, in one line</h1>
+  <p class="subtitle">SAMPLE: what is measured, unit · Higher is better</p>
+
+  <div class="body">
+    <!-- layout-stat (optional) -->
+    <section class="stat"><div class="big">3×</div><div class="big-label">SAMPLE takeaway for the number</div></section>
+
+    <!-- layout-list (optional) -->
+    <section class="list"><ol>
+      <li><div><b>SAMPLE item</b><span>SAMPLE detail</span></div></li>
+      <li><div><b>SAMPLE item</b><span>SAMPLE detail</span></div></li>
+    </ol></section>
+
+    <!-- layout-compare (optional) -->
+    <section class="compare">
+      <div class="pane"><h2>Before</h2><p>SAMPLE</p></div>
+      <div class="pane"><h2>After</h2><p>SAMPLE</p></div>
+    </section>
+
+    <!-- data block (required unless layout-stat shows a sourced number) -->
+    <section class="chart">
+      <div class="bar hi" data-value="56" data-label="56%"><span class="name">SAMPLE A</span></div>
+      <div class="bar" data-value="31" data-label="31%"><span class="name">SAMPLE B</span></div>
+      <div class="bar" data-value="" data-label="not reported"><span class="name">SAMPLE C</span></div>
+    </section>
+
+    <div class="provenance">SAMPLE: n=100 · method · source, date</div>
+    <div class="caveat">SAMPLE short caveat (delete if not required)</div>
+  </div>
+
+  <footer>
+    <div>SAMPLE: data source</div>
+  </footer>
+</div>
+<script>
+  // Render .bar rows as vertical columns with dashed gridlines. Only the numbers need editing.
+  for (const chart of document.querySelectorAll('.chart')) {
+    const bars = [...chart.querySelectorAll('.bar')];
+    if (!bars.length) continue;
+    const vals = bars.filter(b => b.dataset.value).map(b => +b.dataset.value);
+    const max = +chart.dataset.max || Math.max(...vals);
+    const plot = document.createElement('div'); plot.className = 'plot';
+    const names = document.createElement('div'); names.className = 'names';
+    for (const f of [0.25, 0.5, 0.75, 1]) {           // quiet gridlines at quarters of the scale
+      const g = document.createElement('div'); g.className = 'gridline';
+      g.style.bottom = (f * 88) + '%';                   // bars top out at 88% to leave room for labels
+      if (chart.dataset.max && chart.dataset.unit !== undefined) { const s = document.createElement('span'); s.textContent = (f * max) + chart.dataset.unit; g.append(s); }
+      plot.append(g);
+    }
+    for (const b of bars) {
+      const col = document.createElement('div'); col.className = 'col' + (b.classList.contains('hi') ? ' hi' : '');
+      const val = document.createElement('div'); val.className = 'val'; val.textContent = b.dataset.label ?? b.dataset.value;
+      col.append(val);
+      if (b.dataset.value) {
+        const fill = document.createElement('div'); fill.className = 'fill';
+        fill.style.height = (+b.dataset.value / max * 88) + '%'; col.append(fill);
+      } else val.classList.add('missing');
+      plot.append(col);
+      const n = document.createElement('span'); n.textContent = b.querySelector('.name')?.textContent ?? '';
+      if (b.classList.contains('hi')) n.className = 'hi';
+      names.append(n);
+    }
+    chart.append(plot, names);
+  }
+</script>
+</body>
+</html>
