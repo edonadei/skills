@@ -61,9 +61,9 @@ Which of my skills do I actually use?
 | Skill | What it does |
 |---|---|
 | [`aggressively-cleanup-skills`](./skills/aggressively-cleanup-skills/SKILL.md) | Audits every skill on your machine, reports which are dead and why, archives the ones you confirm. |
+| [`harness-infographic`](./skills/harness-infographic/SKILL.md) | Turns a claim about AI tooling or evals into a fact-checked chart card for X, and tells you when a post is not worth publishing. |
 
-More coming. Same idea behind each: nobody audits their installed skills, and it
-shows up on the bill every message.
+More coming.
 
 ## Why These Skills Exist
 
