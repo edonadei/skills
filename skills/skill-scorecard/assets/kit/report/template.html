@@ -1,0 +1,315 @@
+<meta charset="utf-8">
+<title>__TITLE__</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a lab test sheet on graph paper. Verdict stamp up top, then headline numbers,
+   then every single attempt as a dot so nothing hides behind an average. */
+:root {
+  --paper: #eef0ec;
+  --paper-2: #e3e6e0;
+  --grid: rgba(21, 26, 31, 0.055);
+  --ink: #151a1f;
+  --ink-2: #4a525b;
+  --ink-3: #7c848c;
+  --rule: #c9cdc6;
+  --plugin: #2a4bff;
+  --plugin-soft: rgba(42, 75, 255, 0.12);
+  --base: #6e757d;
+  --skill: #a3813a;
+  --pass: #151a1f;
+  --fail: #e0402a;
+  --fail-soft: rgba(224, 64, 42, 0.12);
+  --win: #1f8a4c;
+  --win-soft: rgba(31, 138, 76, 0.12);
+  --card: #f7f8f5;
+  --display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #12161b; --paper-2: #181d23; --grid: rgba(220, 228, 236, 0.045);
+    --ink: #e8ece9; --ink-2: #a9b1b8; --ink-3: #78818a; --rule: #2c333b;
+    --plugin: #7b93ff; --plugin-soft: rgba(123, 147, 255, 0.16); --base: #8d959d; --skill: #cfa95a;
+    --pass: #e8ece9; --fail: #ff6a52; --fail-soft: rgba(255, 106, 82, 0.15);
+    --win: #4fc583; --win-soft: rgba(79, 197, 131, 0.15); --card: #171c22;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #12161b; --paper-2: #181d23; --grid: rgba(220, 228, 236, 0.045);
+  --ink: #e8ece9; --ink-2: #a9b1b8; --ink-3: #78818a; --rule: #2c333b;
+  --plugin: #7b93ff; --plugin-soft: rgba(123, 147, 255, 0.16); --base: #8d959d; --skill: #cfa95a;
+  --pass: #e8ece9; --fail: #ff6a52; --fail-soft: rgba(255, 106, 82, 0.15);
+  --win: #4fc583; --win-soft: rgba(79, 197, 131, 0.15); --card: #171c22;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--ink);
+  font: 15px/1.55 var(--body);
+  padding: 0 16px;
+}
+.sheet { max-width: 1120px; margin: 0 auto; padding-block: 40px 56px; display: grid; gap: 40px; }
+
+.mono { font-family: var(--mono); }
+.eyebrow {
+  font: 500 12px/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2);
+  display: flex; flex-wrap: wrap; gap: 6px 18px;
+}
+.eyebrow span::before { content: "■ "; color: var(--plugin); }
+
+/* Hero */
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 28px; align-items: start; }
+.hero h1 {
+  font: 800 clamp(40px, 7vw, 84px)/0.92 var(--display); font-stretch: 72%;
+  letter-spacing: -0.01em; margin: 14px 0 18px; text-wrap: balance;
+}
+.hero h1 em { font-style: normal; color: var(--plugin); }
+.hero .sub { font-size: 18px; color: var(--ink-2); max-width: 62ch; margin: 0; text-wrap: pretty; }
+.stamp {
+  justify-self: end; margin-top: 18px;
+  border: 5px solid var(--stamp, var(--ink)); color: var(--stamp, var(--ink));
+  padding: 14px 22px 12px; transform: rotate(-6deg); text-align: center;
+  font: 900 clamp(40px, 6vw, 64px)/0.9 var(--display); font-stretch: 100%; letter-spacing: 0.02em;
+  border-radius: 6px; mix-blend-mode: multiply;
+  box-shadow: inset 0 0 0 2px var(--paper), inset 0 0 0 4px var(--stamp, var(--ink));
+}
+.stamp small { display: block; font: 600 11px/1.3 var(--mono); letter-spacing: 0.12em; margin-top: 8px; }
+:root[data-theme="dark"] .stamp { mix-blend-mode: normal; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .stamp { mix-blend-mode: normal; } }
+
+/* Section heads */
+.sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  border-top: 2px solid var(--ink); padding-top: 10px; margin-bottom: 18px; }
+.sec-head h2 { font: 800 26px/1.1 var(--display); font-stretch: 80%; margin: 0; text-transform: uppercase; letter-spacing: 0.01em; }
+.sec-head p { margin: 0; color: var(--ink-2); font-size: 14px; max-width: 60ch; }
+
+/* Legend */
+.legend { display: flex; flex-wrap: wrap; gap: 8px 20px; font: 500 12px/1 var(--mono); color: var(--ink-2); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+
+/* KPI row */
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; background: var(--card);
+  border: 1px solid var(--rule); }
+.kpi { padding: 18px 18px 16px; border-right: 1px solid var(--rule); display: grid; gap: 10px; align-content: start; min-width: 0; }
+.kpi:last-child { border-right: 0; }
+.kpi .label { font: 600 11px/1.3 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
+.kpi .big { font: 800 52px/0.95 var(--display); font-stretch: 75%; font-variant-numeric: tabular-nums; }
+.kpi .big.good { color: var(--win); } .kpi .big.bad { color: var(--fail); } .kpi .big.flat { color: var(--ink); }
+.kpi .note { font-size: 13px; color: var(--ink-2); }
+.bars { display: grid; gap: 5px; }
+.bar { display: grid; grid-template-columns: 64px minmax(0, 1fr) 54px; align-items: center; gap: 8px; font: 500 11px/1 var(--mono); color: var(--ink-2); }
+.bar .track { height: 8px; background: var(--paper-2); position: relative; }
+.bar .fill { position: absolute; inset: 0 auto 0 0; }
+.bar .ci { position: absolute; top: -3px; bottom: -3px; border-left: 1px solid var(--ink-3); border-right: 1px solid var(--ink-3); }
+.bar b { text-align: right; color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* Activation callout */
+.activation { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 24px; align-items: center;
+  background: var(--ink); color: var(--paper); padding: 22px 26px; }
+.activation .big { font: 900 clamp(48px, 8vw, 88px)/0.9 var(--display); font-stretch: 70%; font-variant-numeric: tabular-nums; }
+.activation .big small { font-size: 0.45em; font-stretch: 100%; color: color-mix(in srgb, var(--paper) 60%, transparent); }
+.activation p { margin: 0; font-size: 16px; max-width: 64ch; }
+.activation p b { color: var(--paper); }
+.activation .dots { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 12px; max-width: 520px; }
+.activation .dots i { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid color-mix(in srgb, var(--paper) 45%, transparent); }
+.activation .dots i.on { background: var(--skill); border-color: var(--skill); }
+
+/* Dot matrix */
+.matrix-wrap { overflow-x: auto; background: var(--card); border: 1px solid var(--rule); }
+table.matrix { border-collapse: collapse; width: 100%; min-width: 760px; }
+.matrix td:has(.cell) { min-width: 172px; }
+.matrix th, .matrix td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+.matrix thead th { font: 600 11px/1.2 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); background: var(--paper-2); }
+.matrix tbody tr:last-child td { border-bottom: 0; }
+.matrix .task b { display: block; font: 700 17px/1.15 var(--display); font-stretch: 85%; }
+.matrix .task span { font-size: 12.5px; color: var(--ink-2); }
+.matrix .cat { font: 600 10px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 6px; border: 1px solid var(--rule); color: var(--ink-2); white-space: nowrap; }
+.matrix tr.win td:first-child { box-shadow: inset 4px 0 0 var(--win); }
+.matrix tr.loss td:first-child { box-shadow: inset 4px 0 0 var(--fail); }
+.dotrow { display: flex; flex-wrap: wrap; gap: 3px; max-width: 150px; }
+.dotrow i { flex: none; width: 11px; height: 11px; border-radius: 50%; background: var(--pass); }
+.dotrow i.f { background: transparent; border: 2px solid var(--fail); }
+.cell { display: grid; gap: 4px; }
+.cell .meta { font: 500 11px/1 var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.col-plugin { background: var(--plugin-soft); }
+.delta { font: 700 12px/1 var(--mono); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.delta.up { color: var(--win); } .delta.down { color: var(--fail); } .delta.eq { color: var(--ink-3); }
+
+/* Two-up stories */
+.stories { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.story { background: var(--card); border: 1px solid var(--rule); padding: 20px 22px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.story .tag { font: 700 11px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 8px; justify-self: start; }
+.story.win .tag { background: var(--win-soft); color: var(--win); }
+.story.loss .tag { background: var(--fail-soft); color: var(--fail); }
+.story h3 { font: 800 28px/1 var(--display); font-stretch: 78%; margin: 0; text-wrap: balance; }
+.story p { margin: 0; color: var(--ink-2); }
+.story blockquote { margin: 0; padding: 10px 14px; border-left: 3px solid var(--rule); font: 13px/1.5 var(--mono); color: var(--ink); background: var(--paper-2); }
+.story .score { font: 600 13px/1.4 var(--mono); }
+
+/* Claims */
+table.claims { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--rule); }
+.claims th, .claims td { padding: 12px 14px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+.claims thead th { font: 600 11px/1.2 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); background: var(--paper-2); }
+.claims td.num { font: 600 15px/1.3 var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.claims .ok { color: var(--win); } .claims .no { color: var(--fail); } .claims .meh { color: var(--skill); }
+.claims-wrap { overflow-x: auto; }
+
+/* Method */
+.method { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; font-size: 13.5px; color: var(--ink-2); }
+.method h4 { font: 600 11px/1.2 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); margin: 0 0 6px; }
+.method p { margin: 0; }
+.method code { font: 12.5px var(--mono); background: var(--paper-2); padding: 1px 4px; }
+footer { font: 12px/1.5 var(--mono); color: var(--ink-3); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; border-top: 1px solid var(--rule); padding-top: 14px; }
+footer a { color: var(--ink-2); }
+
+@media (max-width: 860px) {
+  .hero { grid-template-columns: minmax(0, 1fr); }
+  .stamp { justify-self: start; }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kpi:nth-child(2) { border-right: 0; }
+  .kpi:nth-child(-n+2) { border-bottom: 1px solid var(--rule); }
+  .stories, .method { grid-template-columns: minmax(0, 1fr); }
+  .activation { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 480px) {
+  .kpis { grid-template-columns: minmax(0, 1fr); }
+  .kpi { border-right: 0; border-bottom: 1px solid var(--rule); }
+  .kpi:last-child { border-bottom: 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .stamp { animation: thunk 0.5s cubic-bezier(.2, 1.6, .4, 1) both; }
+  @keyframes thunk { from { transform: rotate(-6deg) scale(1.25); } to { transform: rotate(-6deg) scale(1); } }
+}
+</style>
+
+<script id="data" type="application/json">__DATA__</script>
+
+<main class="sheet" id="app">
+  <header class="hero">
+    <div>
+      <div class="eyebrow" id="eyebrow"></div>
+      <h1 id="headline"></h1>
+      <p class="sub" id="sub"></p>
+    </div>
+    <div class="stamp" id="stamp"></div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <h2 id="compare-title"></h2>
+      <div class="legend" id="legend"></div>
+    </div>
+    <div class="kpis" id="kpis"></div>
+  </section>
+
+  <section class="activation" id="activation"></section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Every attempt, one dot</h2>
+      <p id="matrix-note"></p>
+    </div>
+    <div class="matrix-wrap"><table class="matrix" id="matrix"></table></div>
+  </section>
+
+  <section class="stories" id="stories"></section>
+
+  <section>
+    <div class="sec-head">
+      <h2 id="claims-title"></h2>
+      <p id="claims-note"></p>
+    </div>
+    <div class="claims-wrap"><table class="claims" id="claims"></table></div>
+  </section>
+
+  <section class="method" id="method"></section>
+
+  <footer id="footer"></footer>
+</main>
+
+<script>
+(function () {
+  const D = JSON.parse(document.getElementById("data").textContent);
+  const $ = (id) => document.getElementById(id);
+  const pct = (x) => Math.round(x * 100) + "%";
+  const ARMS = [
+    { key: "noskill", label: "No skill", color: "var(--base)" },
+    { key: "skill", label: "Installed skill", color: "var(--skill)" },
+    { key: "always", label: D.copy.always_label, color: "var(--plugin)" },
+  ];
+  const A = D.arms, P = A.always, B = A.noskill;
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  $("eyebrow").innerHTML = D.eyebrow.map((e) => `<span>${esc(e)}</span>`).join("");
+  $("headline").innerHTML = D.copy.headline;
+  $("sub").textContent = D.copy.sub;
+  const stamp = $("stamp");
+  stamp.style.setProperty("--stamp", `var(--${D.copy.stamp_color})`);
+  stamp.innerHTML = `${esc(D.copy.stamp)}<small>${esc(D.copy.stamp_small)}</small>`;
+
+  $("compare-title").textContent = D.copy.compare_title;
+  $("matrix-note").textContent = D.copy.matrix_note;
+  $("claims-title").textContent = D.copy.claims_title;
+  $("claims-note").textContent = D.copy.claims_note;
+  $("legend").innerHTML = ARMS.map((a) => `<span><i style="background:${a.color}"></i>${a.label}</span>`).join("");
+
+  const change = (p, b) => (p - b) / b;
+  const signed = (x) => { const v = Math.round(x * 100); return (v > 0 ? "+" : "") + v + "%"; };
+  const tone = (p, b) => Math.abs(change(p, b)) < 0.02 ? "flat" : p < b ? "good" : "bad";
+  const bars = (field, fmt, ci) => `<div class="bars">${ARMS.map((a) => {
+    const v = A[a.key][field], max = Math.max(...ARMS.map((x) => A[x.key][field])) * (ci ? 1 : 1.08);
+    const w = ci ? v * 100 : (v / max) * 100;
+    const ciEl = ci ? `<span class="ci" style="left:${A[a.key].ci[0] * 100}%;right:${100 - A[a.key].ci[1] * 100}%"></span>` : "";
+    return `<div class="bar"><span>${a.label.split(" ")[0]}</span><span class="track"><span class="fill" style="width:${w}%;background:${a.color}"></span>${ciEl}</span><b>${fmt(v)}</b></div>`;
+  }).join("")}</div>`;
+
+  const dRate = P.rate - B.rate;
+  const kpis = [
+    { label: "Tasks passed", big: (dRate >= 0 ? "+" : "−") + Math.abs(Math.round(dRate * 100)) + " pts",
+      cls: Math.abs(dRate) < 0.05 ? "flat" : dRate > 0 ? "good" : "bad",
+      note: `${pct(P.rate)} vs ${pct(B.rate)}. ${D.copy.kpi_notes[0]}`, bars: bars("rate", pct, true) },
+    { label: "Code written", big: signed(change(P.src_added_total_mean, B.src_added_total_mean)), cls: tone(P.src_added_total_mean, B.src_added_total_mean),
+      note: D.copy.kpi_notes[1], bars: bars("src_added_total_mean", (v) => v.toFixed(1)) },
+    { label: "Tokens", big: signed(change(P.tokens_mean, B.tokens_mean)), cls: tone(P.tokens_mean, B.tokens_mean),
+      note: D.copy.kpi_notes[2], bars: bars("tokens_mean", (v) => Math.round(v / 1000) + "K") },
+    { label: "Wall time", big: signed(change(P.wall_mean, B.wall_mean)), cls: tone(P.wall_mean, B.wall_mean),
+      note: D.copy.kpi_notes[3], bars: bars("wall_mean", (v) => v.toFixed(1) + "s") },
+  ];
+  $("kpis").innerHTML = kpis.map((k) => `<div class="kpi"><div class="label">${k.label}</div><div class="big ${k.cls}">${k.big.replace("-", "−")}</div>${k.bars}<div class="note">${esc(k.note)}</div></div>`).join("");
+
+  const S = A.skill;
+  $("activation").innerHTML = `<div class="big">${S.act_fired}<small> / ${S.act_obs}</small></div>
+    <div><p>${D.copy.activation}</p>
+    <div class="dots" aria-label="${S.act_fired} of ${S.act_obs} attempts loaded the skill">${Array.from({ length: S.act_obs }, (_, i) => `<i class="${i < S.act_fired ? "on" : ""}"></i>`).join("")}</div></div>`;
+
+  const dots = (t) => t ? `<div class="cell"><div class="dotrow">${Array.from({ length: t.usable }, (_, i) => `<i class="${i < t.passes ? "" : "f"}"></i>`).join("")}</div><span class="meta">${t.passes}/${t.usable} · ${t.src_added_median ?? "–"} lines</span></div>` : "–";
+  const rows = D.tasks.map((t) => {
+    const b = B.tasks[t.key], p = P.tasks[t.key];
+    const d = p && b ? p.rate - b.rate : 0;
+    const cls = d >= 0.3 ? "win" : d <= -0.3 ? "loss" : "";
+    const dl = Math.round(d * 100);
+    return `<tr class="${cls}"><td class="task"><b>${esc(t.label)}</b><span>${esc(t.what)}</span></td>
+      <td><span class="cat">${esc(t.cat)}</span></td>
+      ${ARMS.map((a) => `<td class="${a.key === "always" ? "col-plugin" : ""}">${dots(A[a.key].tasks[t.key])}</td>`).join("")}
+      <td><span class="delta ${dl > 0 ? "up" : dl < 0 ? "down" : "eq"}">${dl > 0 ? "+" : dl < 0 ? "−" : "±"}${Math.abs(dl)} pts</span></td></tr>`;
+  }).join("");
+  $("matrix").innerHTML = `<thead><tr><th>Task</th><th>Kind</th>${ARMS.map((a) => `<th class="${a.key === "always" ? "col-plugin" : ""}">${a.label}</th>`).join("")}<th>${esc(D.copy.always_short)} vs none</th></tr></thead><tbody>${rows}</tbody>`;
+
+  $("stories").innerHTML = D.copy.stories.map((s) => `<article class="story ${s.kind}"><span class="tag">${esc(s.tag)}</span><h3>${esc(s.title)}</h3><p>${esc(s.body)}</p>${s.quote ? `<blockquote>${esc(s.quote)}</blockquote>` : ""}<div class="score">${esc(s.score)}</div></article>`).join("");
+
+  $("claims").innerHTML = `<thead><tr><th>README says</th><th>README</th><th>Measured here</th><th></th></tr></thead><tbody>${D.claims.map((c) => `<tr><td>${esc(c.claim)}</td><td class="num">${esc(c.readme)}</td><td class="num ${c.ok}">${esc(c.measured)}</td><td>${esc(c.note)}</td></tr>`).join("")}</tbody>`;
+
+  $("method").innerHTML = D.method.map((m) => `<div><h4>${esc(m.h)}</h4><p>${m.p}</p></div>`).join("");
+  $("footer").innerHTML = D.footer.map((f) => `<span>${f}</span>`).join("");
+})();
+</script>

@@ -22,7 +22,7 @@ npx skills update
 | Skill | What it does |
 |---|---|
 | [`aggressively-cleanup-skills`](./skills/aggressively-cleanup-skills/SKILL.md) | Finds the installed skills you never use and archives the ones you confirm. |
-| [`harness-infographic`](./skills/harness-infographic/SKILL.md) | Turns a claim about AI tooling or evals into a fact-checked chart for X. |
+| [`skill-scorecard`](./skills/skill-scorecard/SKILL.md) | Measures whether a skill makes the agent better, and publishes the report and images for X. |
 
 ### aggressively-cleanup-skills
 
@@ -51,15 +51,15 @@ Or ask your agent:
 Which of my skills do I actually use?
 ```
 
-### harness-infographic
+### skill-scorecard
 
-Turns a post or claim about agents, harnesses, evals, routers, or model cost
-into a chart card for X. It checks the claim first, on a token budget you pick,
-and only numbers it can trace to a source go on the card. It also tells you
-when a post would add nothing to the one you are replying to.
+Runs the same model on the same realistic tasks without a skill, with it installed,
+and with it always on, then grades every attempt with hidden checks the agent never
+sees. It publishes a report page and 4 images for an X post, and says so plainly when
+a skill changes nothing or makes things worse.
 
 ```text
-Make a card for this post, standard budget: https://x.com/...
+/skill-scorecard https://github.com/DietrichGebert/ponytail
 ```
 
 ## Related

@@ -1,0 +1,144 @@
+{
+  "title": "Ponytail Under Test",
+  "always_label": "Plugin (always on)",
+  "always_short": "Plugin",
+  "compare_title": "Ponytail on vs. off",
+  "matrix_note": "● passed the hidden check  ○ failed it. Green edge: ponytail won the task. Red edge: it lost.",
+  "claims_title": "README claims vs. this run",
+  "claims_note": "The README's numbers are for Opus 5.5 on its own benchmark. These are Sonnet 5.5 on ours.",
+  "eyebrow": [
+    "Caliper eval",
+    "claude-sonnet-5-5",
+    "ponytail @ 16352ac",
+    "12 tasks · 342 graded runs"
+  ],
+  "copy": {
+    "headline": "Ponytail cuts code by <em>38%</em>. Correctness doesn’t move.",
+    "sub": "Same model, same prompts, hidden tests. Run as an always-on plugin, ponytail ships smaller diffs at exactly the same pass rate as no skill at all. It fixed one task the plain agent always failed, and broke one it almost always passed. Installed as a plain skill, Sonnet almost never loads it.",
+    "stamp": "MIXED",
+    "stamp_small": "LESS CODE · SAME SCORE",
+    "stamp_color": "skill",
+    "kpi_notes": [
+      "Bars show 95% confidence intervals. No difference.",
+      "Lines added outside tests, per attempt.",
+      "Total per attempt, cache included. Output tokens: −17%.",
+      "Seconds per attempt."
+    ],
+    "activation": "<b>Installed as a regular skill, Sonnet 5.5 loaded ponytail once in 114 coding tasks.</b> Its description says “use on any coding task”, but the agent decides, and it decides no. The real effects on this page come from the plugin, which injects the rules into every session.",
+    "stories": [
+      {
+        "kind": "win",
+        "tag": "Where it helped",
+        "title": "It refused to half-apply a batch",
+        "body": "Asked for the “simplest thing” to import a nightly stock CSV, the agent without ponytail let a bad row crash the import after earlier rows were applied. With ponytail it checked every row first and left the inventory untouched on error.",
+        "quote": "“Inventory.adjust doesn’t undo earlier rows when a later one fails, so a bad row would otherwise have left the file half-applied.”",
+        "score": "Plugin 8/8 · no skill 0/8 · p < 0.001"
+      },
+      {
+        "kind": "loss",
+        "tag": "Where it hurt",
+        "title": "It dropped data to stay lazy",
+        "body": "Asked to “dedupe contacts.csv”, the agent with ponytail kept the first row per email and threw away phone numbers that only lived on the duplicates. It said so in its reply, but the data is still gone. Without ponytail, the agent merged the rows.",
+        "quote": "“I skipped fuzzy name matching, phone matching and merging fields across duplicates.”",
+        "score": "Plugin 1/10 · no skill 8/9 · p = 0.001"
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim": "Less code",
+      "readme": "−53%",
+      "measured": "−38%",
+      "ok": "ok",
+      "note": "Holds up, a bit smaller.",
+      "short": "Holds up."
+    },
+    {
+      "claim": "Fewer tokens",
+      "readme": "−45%",
+      "measured": "−2%",
+      "ok": "no",
+      "note": "Most tokens go to reading the repo, which ponytail doesn’t skip. Output tokens: −17%.",
+      "short": "Reading the repo dominates."
+    },
+    {
+      "claim": "Faster",
+      "readme": "−41%",
+      "measured": "−10%",
+      "ok": "meh",
+      "note": "Real, but a quarter of the claim.",
+      "short": "Real, but small."
+    },
+    {
+      "claim": "Risky logic ships with a test",
+      "readme": "98% vs 68%",
+      "measured": "53% vs 46%",
+      "ok": "meh",
+      "note": "Slightly more tests, nowhere near the claim.",
+      "short": "Nowhere near the claim."
+    },
+    {
+      "claim": "No less safe",
+      "readme": "30/30",
+      "measured": "27/27",
+      "ok": "ok",
+      "note": "Path traversal, SQL/LIKE injection and brute-force lockout all held, even when the prompt begged for a one-liner.",
+      "short": "All security tasks held."
+    }
+  ],
+  "method": [
+    {
+      "h": "Tasks",
+      "p": "12 small but real repos (Python and Node), each a git repo with a passing test suite. Prompts read like real requests, and several push hard for minimal code. 8 to 10 runs per task per setup."
+    },
+    {
+      "h": "Grading",
+      "p": "Hidden Python checks run the agent’s code on cases it never saw, then the repo’s own tests. No LLM judge. Each check was verified to fail on the untouched repo and on the obvious naive fix."
+    },
+    {
+      "h": "Setups",
+      "p": "Same model and prompts. <b>No skill</b>: ponytail removed. <b>Installed skill</b>: available, the agent chooses. <b>Plugin</b>: the exact context ponytail’s own SessionStart hook injects."
+    }
+  ],
+  "footer": [
+    "Run with Caliper (caliper-eval) · claude-code · claude-sonnet-5-5 · Oct 2026",
+    "Skill: github.com/DietrichGebert/ponytail @ 16352ac"
+  ],
+  "slides": {
+    "eyebrow": [
+      "Caliper eval",
+      "ponytail",
+      "sonnet 5.5"
+    ],
+    "repo": "github.com/DietrichGebert/ponytail",
+    "foot": "12 tasks · 342 runs · hidden tests",
+    "headline": "Ponytail cuts code<br>by <em>38%</em>. Correctness<br>doesn’t move.",
+    "stamp": "MIXED",
+    "stamp_small": "LESS CODE · SAME SCORE",
+    "stamp_color": "skill",
+    "activation_title": "Installed as a skill, it almost never runs.",
+    "activation_body": "Sonnet 5.5 loaded ponytail in <b>1 of 114</b> coding tasks. Its description says “use on any coding task”, but the agent decides, and it decides no. <b>Every effect here comes from the plugin</b>, which injects the rules into each session.",
+    "activation_caption": "One dot per task with the skill installed. <b>●</b> it loaded ponytail.",
+    "skill_label": "ponytail",
+    "cases_title": "Same score. Different failures.",
+    "cases": [
+      {
+        "kind": "win",
+        "tag": "Where it helped",
+        "title": "Nightly stock import",
+        "task": "stock",
+        "what": "“Simplest thing, be lazy.” Without ponytail, a bad row crashed the import halfway, leaving stock half-updated. With it, every row was checked first."
+      },
+      {
+        "kind": "loss",
+        "tag": "Where it hurt",
+        "title": "Dedupe a CRM export",
+        "task": "contacts",
+        "what": "“Dedupe contacts.csv.” With ponytail, it kept the first row per email and threw away phone numbers only the duplicates had."
+      }
+    ],
+    "cases_footnote": "The other 10 tasks were tied.",
+    "claims_title": "The README’s claims, re-run.",
+    "claims_foot": "README: Opus 5.5, own benchmark · here: Sonnet 5.5"
+  }
+}
