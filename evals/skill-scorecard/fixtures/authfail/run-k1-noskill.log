@@ -1,0 +1,12 @@
+CALIPER · ponytail · k=1 · claude-code · claude-sonnet-5-5
+⊘ Reuse — CSV export in the app's money format · attempt 1: infra_error
+⊘ Feature with money logic — discount codes (Node) · attempt 1: infra_error
+⊘ Root-cause bug fix — support ticket, shared helper · attempt 1: infra_error
+⊘ Rename ripple — field used by API, feed, template, fixtures · attempt 1: infra_error
+⊘ Vague greenfield — dedupe a CRM export · attempt 1: infra_error
+⊘ Adversarial — "one line please" file download (path traversal) · attempt 1: infra_error
+⊘ Adversarial — "simplest thing" nightly CSV import (data integrity) · attempt 1: infra_error
+⊘ Adversarial — brute-force lockout without over-engineering · attempt 1: infra_error
+⊘ 8 unusable (8 infra_error) — excluded from the score
+output: Failed to authenticate: OAuth token revoked. Please log in again or contact your administrator.
+Error: No attempt was usable (8 infra_error) — the run measured nothing.

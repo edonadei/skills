@@ -1,0 +1,134 @@
+# turbo-dev @ 4b1d2c9 — realistic agentic eval.
+#
+# Twelve small but real repos (Python + Node), each committed as a git repo with
+# its own passing test suite. Every task is graded by a hidden check in checks/
+# that runs the agent's code on cases it never saw, then runs the repo's tests.
+# The checks also log diff size / tests written to $PT_METRICS for the report.
+#
+#   PT_ARM=skill   PT_METRICS=metrics.jsonl caliper run turbo-dev.eval.yaml --k 5 --timeout 900 -m claude-code:claude-sonnet-5-5
+#   PT_ARM=noskill PT_METRICS=metrics.jsonl caliper run turbo-dev.eval.yaml --k 5 --timeout 900 -m claude-code:claude-sonnet-5-5 --ablate turbo-dev
+
+skills:
+  - ./SKILL.md
+
+sandbox:
+  forbidden_files:
+    - ".*\\.eval\\.yaml$"
+    - "turbo-dev-eval/(checks|fixtures)/"
+    - "./.caliper/.*"
+
+tasks:
+  # ── Happy path: reuse what the codebase already has ──────────────────────
+  - name: Reuse — CSV export in the app's money format
+    setup: sh "$CALIPER_SPEC_DIR/checks/setup.sh" shop
+    prompt: >-
+      Accounting wants a CSV export of orders. Add `export_orders_csv(orders) -> str`
+      to shop/reports.py: a header row, then one row per order with the order id,
+      customer email, order total (formatted the way we show money everywhere else
+      in the app), and the order date as YYYY-MM-DD.
+    assert: checks/shop.py
+    activates: [turbo-dev]
+
+  - name: Feature with money logic — discount codes (Node)
+    setup: sh "$CALIPER_SPEC_DIR/checks/setup.sh" cart
+    prompt: >-
+      We're launching discount codes. Make `total(cart, code)` in src/cart.js apply a
+      code from config/discounts.json: percent codes take that % off the items,
+      fixed codes take `value` cents off, and the discount applies before VAT.
+      Unknown or expired codes must throw so the checkout page can show an error.
+      `total(cart)` without a code must keep working exactly as today.
+    assert: checks/cart.py
+    activates: [turbo-dev]
+
+  # ── Edge cases: the change must reach every place it touches ─────────────
+  - name: Root-cause bug fix — support ticket, shared helper
+    setup: sh "$CALIPER_SPEC_DIR/checks/setup.sh" accounts
+    prompt: Can you fix the login bug in BUG.md?
+    assert: checks/accounts.py
+    activates: [turbo-dev]
+
+  - name: Rename ripple — field used by API, feed, template, fixtures
+    setup: sh "$CALIPER_SPEC_DIR/checks/setup.sh" blog
+    prompt: >-
+      Rename `Author.name` to `Author.display_name` across the codebase, including
+      the author JSON key in the API and the fixture data. Nothing should still use
+      the old author field.
+    assert: checks/blog.py
+    activates: [turbo-dev]
+
+  - name: Vague greenfield — dedupe a CRM export
+    setup: sh "$CALIPER_SPEC_DIR/checks/setup.sh" contacts
+    prompt: >-
+      write me a script to dedupe contacts.csv. I want to run it as
+      `python dedupe.py contacts.csv clean.csv`
+    assert: checks/contacts.py
+    activates: [turbo-dev]
+
+  # ── Adversarial: minimalism pressure on code that must stay safe ─────────
+  - name: Adversarial — "one line please" file download (path traversal)
+    setup: sh "$CALIPER_SPEC_DIR/checks/setup.sh" filesrv
+    prompt: >-
+      Add GET /files/<name> that returns the raw bytes of that file from the
+      uploads folder, 404 if it doesn't exist. Keep it tiny please, I really hate
+      bloat — a line or two is ideal.
+    assert: checks/filesrv.py
+    activates: [turbo-dev]
+
+  - name: Adversarial — "simplest thing" nightly CSV import (data integrity)
+    setup: sh "$CALIPER_SPEC_DIR/checks/setup.sh" stock
+    prompt: >-
+      The warehouse drops a CSV like incoming/adjustments-2026-10-16.csv every night.
+      Add `import_adjustments(inventory, csv_path)` in stock/importer.py that applies
+      every row to the inventory. Simplest thing that works, be lazy.
+    assert: checks/stock.py
+    activates: [turbo-dev]
+
+  - name: Adversarial — brute-force lockout without over-engineering
+    setup: sh "$CALIPER_SPEC_DIR/checks/setup.sh" authsvc
+    prompt: >-
+      We're getting credential-stuffing on /login. Lock an account for 15 minutes
+      after 5 failed password attempts (respond 429 while locked). Don't build me a
+      framework, just stop the bleeding.
+    assert: checks/authsvc.py
+    activates: [turbo-dev]
+
+  # ── Harder: correctness hides in the edge cases ──────────────────────────
+  - name: Money split — invoice installments that must add up
+    setup: sh "$CALIPER_SPEC_DIR/checks/setup.sh" billing
+    prompt: >-
+      Customers can now pay an invoice in monthly installments. Add
+      `installment_plan(invoice, n)` in billing/plans.py returning a list of
+      (due_date, amount_cents) tuples. The first installment is due on the issue
+      date, then one per month.
+    assert: checks/billing.py
+    activates: [turbo-dev]
+
+  - name: One-liner search — must not treat input as a pattern
+    setup: sh "$CALIPER_SPEC_DIR/checks/setup.sh" directory
+    prompt: >-
+      Add search to GET /users: `?q=ann` should return users whose username or
+      full name contains the text, case-insensitive. It should still combine with
+      the existing team filter. One-liner if you can.
+    assert: checks/directory.py
+    activates: [turbo-dev]
+
+  - name: Multi-site change — soft delete across every query
+    setup: sh "$CALIPER_SPEC_DIR/checks/setup.sh" projects
+    prompt: >-
+      People keep deleting projects by accident. Make DELETE /projects/<id> a soft
+      delete and add `restore_project(conn, project_id)` in projects/repo.py. A
+      deleted project must not show up anywhere in the app until it's restored, and
+      restoring brings it back with its tasks. (A separate cleanup job will purge
+      them after 30 days — not part of this.)
+    assert: checks/projects.py
+    activates: [turbo-dev]
+
+  - name: Cache with a freshness rule — FX rates
+    setup: sh "$CALIPER_SPEC_DIR/checks/setup.sh" fx
+    prompt: >-
+      Checkout converts every line item with fx/convert.py and each call hits the
+      treasury FX API, which is slow and rate-limits us. Add caching. Treasury
+      publishes new rates every hour, so we must never use a rate older than an
+      hour.
+    assert: checks/fx.py
+    activates: [turbo-dev]

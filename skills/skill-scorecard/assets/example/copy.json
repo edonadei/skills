@@ -105,40 +105,31 @@
     "Skill: github.com/DietrichGebert/ponytail @ 16352ac"
   ],
   "slides": {
-    "eyebrow": [
-      "Caliper eval",
-      "ponytail",
-      "sonnet 5.5"
-    ],
-    "repo": "github.com/DietrichGebert/ponytail",
-    "foot": "12 tasks · 342 runs · hidden tests",
-    "headline": "Ponytail cuts code<br>by <em>38%</em>. Correctness<br>doesn’t move.",
+    "skill_label": "ponytail",
+    "foot": "Ponytail × Claude Sonnet 5.5 · {n} graded runs",
+    "headline": "Less code.<br>The same pass rate.",
     "stamp": "MIXED",
     "stamp_small": "LESS CODE · SAME SCORE",
     "stamp_color": "skill",
-    "activation_title": "Installed as a skill, it almost never runs.",
-    "activation_body": "Sonnet 5.5 loaded ponytail in <b>1 of 114</b> coding tasks. Its description says “use on any coding task”, but the agent decides, and it decides no. <b>Every effect here comes from the plugin</b>, which injects the rules into each session.",
-    "activation_caption": "One dot per task with the skill installed. <b>●</b> it loaded ponytail.",
-    "skill_label": "ponytail",
-    "cases_title": "Same score. Different failures.",
+    "activation_title": "Installed as a skill,<br>Sonnet loaded it<br>in <span style=\"color:var(--red)\">1 of 114</span> runs.",
+    "activation_body": "One dot per run, grouped by task. Red marks the only run where Sonnet chose to load the skill, on the brute-force lockout task. The other slides use the plugin, which loads the rules into every session.",
+    "cases_title": "Same score.<br>Different failures.",
     "cases": [
       {
         "kind": "win",
-        "tag": "Where it helped",
-        "title": "Nightly stock import",
         "task": "stock",
-        "what": "“Simplest thing, be lazy.” Without ponytail, a bad row crashed the import halfway, leaving stock half-updated. With it, every row was checked first."
+        "title": "Won the stock import",
+        "what": "Without ponytail, one bad row crashed the import halfway through. With it, the agent checked every row first."
       },
       {
         "kind": "loss",
-        "tag": "Where it hurt",
-        "title": "Dedupe a CRM export",
         "task": "contacts",
-        "what": "“Dedupe contacts.csv.” With ponytail, it kept the first row per email and threw away phone numbers only the duplicates had."
+        "title": "<span>Lost</span> the CRM dedupe",
+        "what": "With ponytail, the agent kept the first row per email and dropped the phone numbers only the duplicates had."
       }
     ],
-    "cases_footnote": "The other 10 tasks were tied.",
-    "claims_title": "The README’s claims, re-run.",
-    "claims_foot": "README: Opus 5.5, own benchmark · here: Sonnet 5.5"
+    "cases_footnote": "The other 10 tasks scored the same with and without ponytail.",
+    "claims_title": "The README, checked.",
+    "claims_foot": "“53% vs 46%” reads with ponytail vs without. README numbers: Opus 5.5 on the author’s benchmark. Measured: Sonnet 5.5 on 12 realistic tasks."
   }
 }

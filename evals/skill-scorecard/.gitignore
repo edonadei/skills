@@ -1,0 +1,5 @@
+.shimhome/
+results/
+spec-*.eval.yaml
+candidates/
+designs/

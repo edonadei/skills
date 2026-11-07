@@ -1,0 +1,11 @@
+#!/bin/sh
+# Inside this eval the agent may validate a spec but never start billed runs.
+if [ "$1" = "run" ]; then
+  echo "caliper run is disabled inside this eval: no agent runs can be started from here." >&2
+  exit 2
+fi
+for p in $(echo "$PATH" | tr ':' ' '); do
+  [ "$p" = "$(cd "$(dirname "$0")" && pwd)" ] && continue
+  [ -x "$p/caliper" ] && exec "$p/caliper" "$@"
+done
+echo "caliper not found" >&2; exit 127

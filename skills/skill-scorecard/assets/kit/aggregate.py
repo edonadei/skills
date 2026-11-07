@@ -6,23 +6,26 @@ Reads results-<tag>-<arm>.json and metrics-<tag>.jsonl for every tag; unusable a
 """
 import json
 import math
+import re
 import statistics as st
 import sys
 from collections import defaultdict
 from pathlib import Path
-
-import yaml
 
 TAGS = sys.argv[1:]
 ARMS = ["noskill", "skill", "always"]
 meta = json.loads(Path("meta.json").read_text())
 RISKY = {k for k, t in meta["tasks"].items() if t.get("risky")}
 
-# Task name -> key, from every spec's `assert: checks/<key>.py`.
+# Task name -> key, from every spec's `- name: ...` / `assert: checks/<key>.py` pairs.
 KEY = {}
 for spec in Path(".").glob("*.eval.yaml"):
-    for t in yaml.safe_load(spec.read_text())["tasks"]:
-        KEY[t["name"]] = Path(t["assert"]).stem
+    name = None
+    for line in spec.read_text().splitlines():
+        if m := re.match(r"\s*- name:\s*(.+?)\s*$", line):
+            name = m.group(1).strip("\"'")
+        elif (m := re.match(r"\s*assert:\s*checks/(\w+)\.py\s*$", line)) and name:
+            KEY[name] = m.group(1)
 
 
 def wilson(s, n, z=1.96):
@@ -48,7 +51,9 @@ for tag in TAGS:
         d = json.loads(line)
         metrics[(d["arm"], d["task"])].append(d)
 
-out = {"tags": TAGS, "arms": {}}
+out = {"tags": TAGS, "arms": {}, "activation": [],
+       "runs": [{"arm": m["arm"], "task": m["task"], "passed": m["passed"], "loc": m["src_added"]}
+                for v in metrics.values() for m in v]}
 for arm in ARMS:
     pooled = defaultdict(list)
     for tag in TAGS:
@@ -73,8 +78,11 @@ for arm in ARMS:
                 A["unusable"] += 1
                 continue
             if a.get("activated") is not None:
+                fired = meta["skill_name"] in (a.get("activated") or [])
                 A["act_obs"] += 1
-                A["act_fired"] += meta["skill_name"] in (a.get("activated") or [])
+                A["act_fired"] += fired
+                if arm == "skill":
+                    out["activation"].append({"task": key, "fired": fired})
             u = a.get("usage") or {}
             tot = sum(u.get(k) or 0 for k in ("input_tokens", "output_tokens", "cache_read_tokens", "cache_creation_tokens"))
             if tot:

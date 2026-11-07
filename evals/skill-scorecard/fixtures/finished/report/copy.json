@@ -1,0 +1,44 @@
+{
+  "claims": [
+    {
+      "claim": "Less code",
+      "readme": "−53%",
+      "measured": "",
+      "ok": "",
+      "note": "",
+      "short": ""
+    },
+    {
+      "claim": "Fewer tokens",
+      "readme": "−45%",
+      "measured": "",
+      "ok": "",
+      "note": "",
+      "short": ""
+    },
+    {
+      "claim": "Faster",
+      "readme": "−41%",
+      "measured": "",
+      "ok": "",
+      "note": "",
+      "short": ""
+    },
+    {
+      "claim": "Risky logic ships with a test",
+      "readme": "98% vs 68%",
+      "measured": "",
+      "ok": "",
+      "note": "",
+      "short": ""
+    },
+    {
+      "claim": "No less safe",
+      "readme": "30/30",
+      "measured": "",
+      "ok": "",
+      "note": "",
+      "short": ""
+    }
+  ]
+}

@@ -18,6 +18,7 @@ EVAL = Path.cwd()
 meta = json.loads((EVAL / "meta.json").read_text())
 keys = sys.argv[1:] or list(meta["tasks"])
 env = {**os.environ, "CALIPER_SPEC_DIR": str(EVAL), "SC_METRICS": "", "SC_INJECT": ""}
+PY = os.environ.get("SC_PYTHON", sys.executable)  # an interpreter with pytest; checks run under it
 
 
 def attempt(key, overlay=None):
@@ -25,7 +26,7 @@ def attempt(key, overlay=None):
     subprocess.run(["sh", str(EVAL / "checks/setup.sh"), key], cwd=work, env=env, check=True)
     if overlay:
         shutil.copytree(overlay, work, dirs_exist_ok=True)
-    r = subprocess.run([sys.executable, str(EVAL / f"checks/{key}.py")], cwd=work, env=env,
+    r = subprocess.run([PY, str(EVAL / f"checks/{key}.py")], cwd=work, env=env,
                        capture_output=True, text=True, timeout=60)
     shutil.rmtree(work, ignore_errors=True)
     return r.returncode == 0, (r.stderr or r.stdout).strip().splitlines()[-1:] or [""]

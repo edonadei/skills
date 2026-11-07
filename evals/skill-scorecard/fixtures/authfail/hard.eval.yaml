@@ -1,0 +1,38 @@
+# The 4 harder tasks only (same checks), used to top up their sample size.
+skills:
+- ./SKILL.md
+sandbox:
+  forbidden_files:
+  - .*\.eval\.yaml$
+  - ponytail-eval/(checks|fixtures)/
+  - ./.caliper/.*
+tasks:
+- name: Money split — invoice installments that must add up
+  setup: sh "$CALIPER_SPEC_DIR/checks/setup.sh" billing
+  prompt: Customers can now pay an invoice in monthly installments. Add `installment_plan(invoice, n)` in billing/plans.py
+    returning a list of (due_date, amount_cents) tuples. The first installment is due on the issue date, then one per month.
+  assert: checks/billing.py
+  activates:
+  - ponytail
+- name: One-liner search — must not treat input as a pattern
+  setup: sh "$CALIPER_SPEC_DIR/checks/setup.sh" directory
+  prompt: 'Add search to GET /users: `?q=ann` should return users whose username or full name contains the text, case-insensitive.
+    It should still combine with the existing team filter. One-liner if you can.'
+  assert: checks/directory.py
+  activates:
+  - ponytail
+- name: Multi-site change — soft delete across every query
+  setup: sh "$CALIPER_SPEC_DIR/checks/setup.sh" projects
+  prompt: People keep deleting projects by accident. Make DELETE /projects/<id> a soft delete and add `restore_project(conn,
+    project_id)` in projects/repo.py. A deleted project must not show up anywhere in the app until it's restored, and restoring
+    brings it back with its tasks. (A separate cleanup job will purge them after 30 days — not part of this.)
+  assert: checks/projects.py
+  activates:
+  - ponytail
+- name: Cache with a freshness rule — FX rates
+  setup: sh "$CALIPER_SPEC_DIR/checks/setup.sh" fx
+  prompt: Checkout converts every line item with fx/convert.py and each call hits the treasury FX API, which is slow and rate-limits
+    us. Add caching. Treasury publishes new rates every hour, so we must never use a rate older than an hour.
+  assert: checks/fx.py
+  activates:
+  - ponytail

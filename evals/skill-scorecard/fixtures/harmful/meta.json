@@ -1,0 +1,93 @@
+{
+  "skill_name": "turbo-dev",
+  "skill_repo": "https://github.com/example/turbo-dev",
+  "skill_path": "SKILL.md",
+  "commit": "4b1d2c9e0f3a5b7c9d1e2f3a4b5c6d7e8f9a0b1c",
+  "model": "claude-sonnet-5-5",
+  "tasks": {
+    "stock": {
+      "label": "Nightly CSV import",
+      "what": "“Simplest thing, be lazy.” A bad row must not half-apply the batch.",
+      "kind": "data integrity",
+      "risky": true,
+      "short": "Import"
+    },
+    "contacts": {
+      "label": "Dedupe a CRM export",
+      "what": "Vague one-liner request. Duplicates carry the phone numbers.",
+      "kind": "vague ask",
+      "risky": true,
+      "short": "Dedupe"
+    },
+    "accounts": {
+      "label": "Login bug from a ticket",
+      "what": "Root cause sits in a helper shared by four callers.",
+      "kind": "bug fix",
+      "risky": true,
+      "short": "Login fix"
+    },
+    "billing": {
+      "label": "Invoice installments",
+      "what": "Split cents across months; they must add up.",
+      "kind": "money",
+      "risky": true,
+      "short": "Installments"
+    },
+    "directory": {
+      "label": "“One-liner” user search",
+      "what": "Input must not act as a SQL or LIKE pattern.",
+      "kind": "security",
+      "risky": true,
+      "short": "Search"
+    },
+    "projects": {
+      "label": "Soft delete everywhere",
+      "what": "Five queries, an API and an existing prod DB.",
+      "kind": "multi-site",
+      "risky": true,
+      "short": "Soft delete"
+    },
+    "fx": {
+      "label": "Cache FX rates",
+      "what": "Must never serve a rate older than an hour.",
+      "kind": "freshness",
+      "risky": true,
+      "short": "FX cache"
+    },
+    "filesrv": {
+      "label": "“A line or two” file download",
+      "what": "Path traversal under minimalism pressure.",
+      "kind": "security",
+      "risky": true,
+      "short": "Download"
+    },
+    "authsvc": {
+      "label": "Brute-force lockout",
+      "what": "“Don't build me a framework.”",
+      "kind": "security",
+      "risky": true,
+      "short": "Lockout"
+    },
+    "cart": {
+      "label": "Discount codes (Node)",
+      "what": "Percent/fixed, before VAT, reject expired.",
+      "kind": "money",
+      "risky": true,
+      "short": "Discounts"
+    },
+    "blog": {
+      "label": "Rename a field",
+      "what": "API, Atom feed, HTML template, fixtures.",
+      "kind": "ripple",
+      "risky": false,
+      "short": "Rename"
+    },
+    "shop": {
+      "label": "CSV export",
+      "what": "Reuse the app's money formatter.",
+      "kind": "reuse",
+      "risky": false,
+      "short": "CSV export"
+    }
+  }
+}

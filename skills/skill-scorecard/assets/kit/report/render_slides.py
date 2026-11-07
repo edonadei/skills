@@ -1,7 +1,7 @@
 """Render the 4 X images (from the eval dir):
     python3 report/render_slides.py summary-<tags>.json  ->  report/slides/slide-{1..4}.png
 1440x1200 CSS px (6:5, the shape X's multi-image carousel shows uncropped) at 1.5x.
-Prints, per slide, any element crossing the 96px side margin or the slide's bottom: fix
+Prints, per slide, any element crossing the 88px side margin or the slide's bottom: fix
 those before posting.
 """
 import json
@@ -13,7 +13,9 @@ from playwright.sync_api import sync_playwright
 HERE = Path(__file__).parent
 summary = json.loads(Path(sys.argv[1]).read_text())
 copy = json.loads((HERE / "copy.json").read_text())
-data = json.dumps({"arms": summary["arms"], "claims": copy["claims"], "s": copy["slides"]}).replace("</", "<\\/")
+meta = json.loads(Path("meta.json").read_text())
+data = json.dumps({"arms": summary["arms"], "runs": summary["runs"], "activation": summary["activation"],
+                   "tasks": meta["tasks"], "claims": copy["claims"], "s": copy["slides"]}).replace("</", "<\\/")
 page = HERE / ".slides.render.html"
 page.write_text((HERE / "slides.html").read_text().replace("__DATA__", data))
 out = HERE / "slides"
@@ -32,7 +34,7 @@ with sync_playwright() as p:
         el = pg.locator(f"#s{i}")
         over = el.evaluate("""s => { const q = s.getBoundingClientRect();
             return [...s.querySelectorAll('*')].filter(e => { const r = e.getBoundingClientRect();
-              return r.width && (r.right > q.right - 95 || r.left < q.left + 95 || r.bottom > q.bottom); })
+              return r.width && (r.right > q.right - 87 || r.left < q.left + 87 || r.bottom > q.bottom + 0.5); })
             .map(e => (e.className || e.tagName) + ':' + (e.textContent || '').trim().slice(0, 30)); }""")
         el.screenshot(path=str(out / f"slide-{i}.png"))
         print(f"slide {i}: {'ok' if not over else 'OUTSIDE MARGIN: ' + '; '.join(over[:4])}")
