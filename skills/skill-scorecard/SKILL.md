@@ -45,10 +45,12 @@ injected text when run from a fixture folder.
 Read [references/tasks.md](references/tasks.md), then build at least 10 tasks. Each
 one gets `fixtures/<key>/`, `checks/<key>.py`, `solutions/<key>/reference/`, at least
 one `solutions/<key>/naive-*/`, a `meta.json` entry and a spec entry in
-`scorecard.eval.yaml`.
+`scorecard.eval.yaml` (the kit's skeleton). `assets/example/` has one complete task in
+every one of those shapes; everything you need is in this skill's folder.
 
 Done when `python3 verify_checks.py` prints `ALL CHECKS VERIFIED`: every check fails
-on the untouched fixture, passes the reference, and fails every naive solution.
+on the untouched fixture, passes the reference, and fails every naive solution. Set
+`SC_PYTHON` to a Python that has `pytest` if the default one lacks it.
 
 ## 4. Smoke run
 
@@ -82,7 +84,8 @@ against the summary JSON.
 ## 7. Images for X
 
 Fill the `slides` block of `copy.json`, run
-`python3 report/render_slides.py summary-<tags>.json`, and open every PNG.
+`python3 report/render_slides.py summary-<tags>.json`, and open every PNG. To push the
+design further, use the `impeccable` skill on `report/slides.html` (see report.md).
 
 Done when the script prints `ok` for all 4 slides and you have looked at each image.
 

@@ -1,0 +1,28 @@
+{
+  "claims": [
+    {
+      "claim": "More tasks solved",
+      "readme": "+20%",
+      "measured": "",
+      "ok": "",
+      "note": "",
+      "short": ""
+    },
+    {
+      "claim": "Faster",
+      "readme": "2× faster",
+      "measured": "",
+      "ok": "",
+      "note": "",
+      "short": ""
+    },
+    {
+      "claim": "Less code",
+      "readme": "−50%",
+      "measured": "",
+      "ok": "",
+      "note": "",
+      "short": ""
+    }
+  ]
+}

@@ -41,7 +41,7 @@ nothing did. The stamp shows the verdict word and a few words of why
 | `matrix_note`, `copy.stories[]` | page grid and story cards |
 | `claims[]` (`claim`, `readme`, `measured`, `ok`, `note`, `short`), `claims_title`, `claims_note` | page and slide 4 |
 | `method[]`, `footer[]` | page bottom |
-| `slides.*` | the 4 images |
+| `slides.*` (`skill_label`, `foot` with `{n}`, `headline`, `stamp*`, `activation_*`, `cases_*`, `claims_*`) | the 4 images |
 
 ## The page
 
@@ -51,14 +51,45 @@ file keeps the URL.
 
 ## The images
 
-`python3 report/render_slides.py summary-<tags>.json` writes `report/slides/slide-1..4.png`:
-the verdict with the four headline numbers, the activation rate, the flipped tasks, and
-the claims table.
+`python3 report/render_slides.py summary-<tags>.json` writes `report/slides/slide-1..4.png`.
+Every mark on slides 1-3 is one real graded run, so the image is the evidence:
+
+1. **Verdict.** One bar per run, as long as the lines of code it added, stacked longest
+   first: without the skill against with it, on one scale. Pale bars failed.
+2. **Activation.** One dot per run with the skill installed, grouped by task, red where
+   the agent chose to load it.
+3. **Flipped tasks.** One disc per run on the two `cases`, hollow when it failed.
+4. **Claims.** The author's numbers against the measured ones, struck through when not
+   reproduced.
+
+The task columns on slide 2 read `short` from `meta.json` (falling back to `label`).
 
 They are 6:5 (2160×1800) because X's multi-image carousel crops each image to about
 that shape: a 16:9 image loses its left and right edges. The script warns when any
-element crosses the side margins or the bottom edge; shorten the copy until all four
-print `ok`, then open each PNG and read it like a stranger on a phone.
+element crosses the 88px side margins or the bottom edge; shorten the copy until all
+four print `ok`, then open each PNG and read it like a stranger on a phone.
+
+Write the slide copy for that stranger. Keep one vocabulary: a **run** is one graded
+attempt, a **task** is one of the coding problems, and the arms are "with" and
+"without" the skill. Give counts their totals ("104 of 113 passed"). The agent does
+the work; the skill is the condition ("With it, the agent checked every row first").
+
+### Iterating on the design
+
+`report/slides.html` is plain HTML and CSS, so the
+[impeccable](https://github.com/pbakaus/impeccable) design skill can work on it
+directly: `/impeccable polish` for a quality pass, `/impeccable clarify` for the copy,
+`/impeccable overdrive` for a bolder direction (it proposes options first). To show
+two versions side by side, render each and put the sheets in one image.
+
+If `/impeccable` isn't available, install it with:
+
+```bash
+npx impeccable install
+```
+
+In Claude Code you can also run `/plugin marketplace add pbakaus/impeccable`, then
+install Impeccable from `/plugin`.
 
 The draft post's numbers must match the images. A post that says "costs more" next to
-an image that shows −3% tokens gets quoted back at its author.
+an image that shows −2% tokens gets quoted back at its author.

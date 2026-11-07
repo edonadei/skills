@@ -1,0 +1,5 @@
+{
+  "WELCOME10": { "type": "percent", "value": 10 },
+  "FIVEOFF": { "type": "fixed", "value": 500 },
+  "BLACKFRIDAY": { "type": "percent", "value": 30, "expires": "2025-12-01" }
+}

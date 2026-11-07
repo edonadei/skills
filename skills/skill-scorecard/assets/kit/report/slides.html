@@ -3,153 +3,194 @@
 <head>
 <meta charset="utf-8">
 <title>Scorecard Slides</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800;900&display=swap">
 <style>
-/* Four 1440x1200 (6:5) slides for an X post: the shape X's multi-image carousel shows,
-   so nothing gets cropped. Same lab-sheet look as the page. One point per slide. */
+/* The scorecard's 4 images for X: 1440x1200 (6:5, what X's carousel shows uncropped).
+   Swiss poster world, and every mark on slides 1-3 is one real graded run.
+   Poster: Swiss print. One enormous number per slide, heavy black rules,
+   a strict left-aligned grid, one red accent. README claims that failed are struck out. */
 :root {
-  --paper: #eef0ec; --paper-2: #e3e6e0; --grid: rgba(21, 26, 31, 0.06);
-  --ink: #151a1f; --ink-2: #4a525b; --ink-3: #7c848c; --rule: #c9cdc6; --card: #f7f8f5;
-  --plugin: #2a4bff; --base: #6e757d; --skill: #a3813a;
-  --fail: #e0402a; --win: #1f8a4c;
-  --display: "Archivo", "Arial Narrow", Arial, sans-serif;
-  --body: "IBM Plex Sans", Arial, sans-serif;
-  --mono: "IBM Plex Mono", Menlo, monospace;
-  color-scheme: light;
+  --bg: #ecedea; --ink: #0e0e0e; --ink-2: #4f5256; --grey: #6f7276; --rule: #0e0e0e; --light: #d3d5d1;
+  --red: #e1251b; --win: #1f7a45;
+  --font: "Schibsted Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: #888; display: grid; gap: 40px; padding: 40px; justify-content: center; }
-.slide {
-  width: 1440px; height: 1200px; position: relative; overflow: hidden;
-  background-color: var(--paper);
-  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size: 32px 32px;
-  color: var(--ink); font-family: var(--body);
-  padding: 80px 96px 0; display: flex; flex-direction: column;
-}
-.top { display: flex; justify-content: space-between; align-items: center; font: 600 22px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
-.top span::before { content: "■ "; color: var(--plugin); }
-.top .n { color: var(--ink); }
-.top .n::before { content: none; }
-.foot { margin-top: auto; border-top: 2px solid var(--ink); display: flex; justify-content: space-between; gap: 24px; padding: 20px 0 36px;
-  font: 500 21px/1.3 var(--mono); color: var(--ink-2); }
-h1, h2 { font-family: var(--display); font-weight: 800; font-stretch: 72%; margin: 0; letter-spacing: -0.01em; line-height: 0.92; text-wrap: balance; }
-h1 { font-size: 136px; margin-top: 44px; }
-h2 { font-size: 104px; margin-top: 40px; }
-em { font-style: normal; color: var(--plugin); }
-
-/* Slide 1 */
-.headrow { position: relative; }
-.stamp { position: absolute; right: 8px; bottom: -34px; transform: rotate(-7deg);
-  border: 7px solid var(--stamp, var(--skill)); color: var(--stamp, var(--skill)); border-radius: 8px; padding: 16px 28px 12px; text-align: center;
-  box-shadow: inset 0 0 0 3px var(--paper), inset 0 0 0 6px var(--stamp, var(--skill));
-  font: 900 70px/0.9 var(--display); letter-spacing: 0.02em; }
-.stamp small { display: block; font: 700 16px/1.3 var(--mono); letter-spacing: 0.14em; margin-top: 10px; }
-.nums { display: grid; grid-template-columns: 1fr 1fr; margin-top: 64px; background: var(--card); border: 2px solid var(--rule); }
-.num { padding: 26px 34px 28px; }
-.num:nth-child(odd) { border-right: 2px solid var(--rule); }
-.num:nth-child(-n+2) { border-bottom: 2px solid var(--rule); }
-.num .l { font: 700 21px/1.2 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); }
-.num .v { font: 800 112px/1 var(--display); font-stretch: 72%; font-variant-numeric: tabular-nums; margin-top: 6px; }
-.num .v.good { color: var(--win); } .num .v.bad { color: var(--fail); }
-.num .d { font-size: 25px; color: var(--ink-2); margin-top: 4px; }
+body { margin: 0; background: #777; display: grid; gap: 40px; padding: 40px; justify-content: center; }
+.slide { width: 1440px; height: 1200px; background: var(--bg); color: var(--ink); font-family: var(--font);
+  padding: 0 88px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+.top { border-top: 14px solid var(--ink); margin-top: 72px; }
+.giant { font: 900 410px/0.78 var(--font); letter-spacing: -0.06em; margin: 74px 0 0 -8px; font-variant-numeric: tabular-nums; }
+.giant.red { color: var(--red); }
+.giant small { font-size: 0.42em; letter-spacing: -0.04em; color: var(--grey); }
+.label { font: 700 30px/1.1 var(--font); text-transform: uppercase; letter-spacing: 0.02em; margin-top: 22px; }
+h1 { font: 800 92px/0.96 var(--font); letter-spacing: -0.035em; margin: 58px 0 0; text-wrap: balance; max-width: 1050px; }
+.rule { border-top: 5px solid var(--rule); }
+.bottom { margin-top: auto; padding-bottom: 64px; }
+.strip { display: grid; grid-template-columns: repeat(3, 1fr); }
+.strip > div { padding: 20px 24px 0 0; }
+.strip > div + div { border-left: 2px solid var(--ink); padding-left: 24px; }
+.strip b { display: block; font: 800 84px/1 var(--font); letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.strip span { font: 600 22px/1.2 var(--font); text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-2); }
+.verdict { position: absolute; right: 88px; top: 146px; background: var(--red); color: #fff; padding: 22px 26px 18px;
+  font: 900 54px/0.9 var(--font); letter-spacing: -0.01em; text-transform: uppercase; }
+.verdict small { display: block; font: 700 18px/1.25 var(--font); letter-spacing: 0.06em; margin-top: 10px; }
 
 /* Slide 2 */
-.s2 { background-color: var(--ink); color: var(--paper);
-  background-image: linear-gradient(rgba(238,240,236,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(238,240,236,.05) 1px, transparent 1px); }
-.s2 .top, .s2 .foot { color: #a9b1b8; } .s2 .top .n { color: var(--paper); } .s2 .foot { border-color: var(--paper); }
-.giant { font: 900 300px/0.8 var(--display); font-stretch: 66%; font-variant-numeric: tabular-nums; margin-top: 64px; }
-.giant small { font-size: 0.4em; font-stretch: 90%; color: #78818a; }
-.s2 h2 { font-size: 92px; margin-top: 40px; color: var(--paper); }
-.s2 p { font-size: 31px; line-height: 1.4; color: #c3cad0; margin: 24px 0 0; max-width: 1180px; }
-.s2 p b { color: var(--paper); font-weight: 600; }
-.dots { display: grid; grid-template-columns: repeat(38, 16px); gap: 12px 17.2px; margin-top: 44px; }
-.dots i { width: 16px; height: 16px; border-radius: 50%; border: 2.5px solid #5b636b; }
-.dots i.on { background: var(--skill); border-color: var(--skill); }
-.dots-cap { font: 500 22px/1 var(--mono); color: #8d959d; margin-top: 20px; }
-.dots-cap b { color: var(--skill); }
+.dots { display: grid; grid-template-columns: repeat(19, 1fr); gap: 14px; margin: 44px 0 0; }
+.dots i { aspect-ratio: 1; border-radius: 50%; background: var(--light); }
+.dots i.on { background: var(--red); }
+.body { font: 500 31px/1.35 var(--font); max-width: 1180px; margin: 26px 0 0; }
 
 /* Slide 3 */
-.duel { display: grid; gap: 24px; margin-top: 34px; }
-.case { background: var(--card); border: 2px solid var(--rule); padding: 26px 34px 20px; border-left: 12px solid var(--c); }
-.case .tag { font: 700 20px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--c); }
-.case h3 { font: 800 56px/1 var(--display); font-stretch: 76%; margin: 10px 0 8px; }
-.case .what { font-size: 25px; line-height: 1.36; color: var(--ink-2); margin: 0 0 12px; }
-.arm { display: grid; grid-template-columns: 190px 1fr auto; align-items: center; gap: 20px; padding: 10px 0; border-top: 1px solid var(--rule); }
-.arm .who { font: 600 23px/1.1 var(--mono); }
-.arm .who.p { color: var(--plugin); }
-.row { display: flex; gap: 9px; }
-.row i { width: 28px; height: 28px; border-radius: 50%; background: var(--ink); }
-.row i.f { background: transparent; border: 4.5px solid var(--fail); }
-.arm b { font: 700 36px/1 var(--mono); font-variant-numeric: tabular-nums; }
-.tie { margin-top: 26px; font-size: 27px; color: var(--ink-2); }
-.tie b { color: var(--ink); }
+.halves { display: grid; grid-template-columns: 1fr 1fr; margin-top: 50px; }
+.half { padding-right: 40px; display: flex; flex-direction: column; }
+.half + .half { border-left: 5px solid var(--ink); padding: 0 0 0 40px; }
+.half .k { font: 900 30px/1 var(--font); text-transform: uppercase; letter-spacing: 0.02em; }
+.half .k.win { color: var(--ink); } .half .k.loss { color: var(--red); }
+.half h2 { font: 800 50px/1.02 var(--font); letter-spacing: -0.03em; margin: 0; }
+.half h2 span { color: var(--red); }
+.score { display: grid; grid-template-columns: auto 1fr; column-gap: 20px; align-items: baseline; margin-top: 34px; }
+.score b { font: 900 136px/0.95 var(--font); letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.score span { font: 700 24px/1.2 var(--font); text-transform: uppercase; color: var(--ink-2); }
+.half p { font: 500 25px/1.35 var(--font); color: var(--ink-2); margin: 26px 0 0; }
 
 /* Slide 4 */
-table { width: 100%; border-collapse: collapse; margin-top: 44px; background: var(--card); border: 2px solid var(--rule); }
-th { font: 700 20px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); text-align: left; padding: 20px 26px; background: var(--paper-2); }
-td { padding: 22px 26px; border-top: 2px solid var(--rule); font-size: 29px; vertical-align: top; }
-td.c { font-weight: 600; }
-td.c span { display: block; font-weight: 400; font-size: 22px; color: var(--ink-2); margin-top: 6px; }
-td.v { font: 700 44px/1 var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.ok { color: var(--win); } .no { color: var(--fail); } .meh { color: var(--skill); }
+.claims { margin-top: 50px; }
+.claim { display: grid; grid-template-columns: 1fr 290px 370px; align-items: baseline; border-top: 3px solid var(--ink); padding: 20px 0 22px; }
+.claim:last-child { border-bottom: 3px solid var(--ink); }
+.claim .c { font: 700 34px/1.1 var(--font); letter-spacing: -0.01em; }
+.claim .r { white-space: nowrap; font: 700 42px/1 var(--font); color: var(--grey); font-variant-numeric: tabular-nums; }
+.claim .r.struck { text-decoration: line-through; text-decoration-color: var(--red); text-decoration-thickness: 5px; }
+.claim .m { white-space: nowrap; font: 900 62px/1 var(--font); letter-spacing: -0.03em; text-align: right; font-variant-numeric: tabular-nums; }
+.claim .m.no { color: var(--red); }
+.heads { display: grid; grid-template-columns: 1fr 290px 370px; font: 700 20px/1 var(--font); text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-2); padding-bottom: 12px; }
+.heads span:last-child { text-align: right; }
+.fine { font: 500 21px/1.35 var(--font); color: var(--ink-2); margin-top: 18px; }
+
+/* Slide 1: poster-scale bars, the number set on the bar */
+.vs { margin-top: 72px; display: grid; gap: 46px; }
+.vs .d { font: 900 76px/1 var(--font); letter-spacing: -0.04em; text-align: right; font-variant-numeric: tabular-nums; }
+.vs .row { display: grid; grid-template-columns: 230px 1fr 190px; align-items: center; column-gap: 28px; }
+.vs .name { font: 800 32px/1.05 var(--font); letter-spacing: -0.01em; }
+.vs .name small { display: block; font: 600 20px/1.3 var(--font); text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-2); margin-top: 6px; }
+.vs .bars { display: grid; gap: 10px; }
+.vs .bar { height: 112px; display: flex; align-items: center; justify-content: flex-end; padding: 0 22px;
+  font: 900 54px/1 var(--font); letter-spacing: -0.03em; color: var(--bg); font-variant-numeric: tabular-nums; }
+.vs .bar.off { background: var(--ink); } .vs .bar.on { background: var(--red); }
+.vs .bar em { font: 700 22px/1 var(--font); font-style: normal; letter-spacing: 0.03em; text-transform: uppercase; margin-right: auto; }
+.aside { font: 600 26px/1.3 var(--font); color: var(--ink-2); }
+.aside b { color: var(--ink); font-weight: 800; }
+.foot { margin-top: auto; border-top: 5px solid var(--ink); padding: 18px 0 56px; display: flex; justify-content: space-between;
+  font: 700 22px/1 var(--font); text-transform: uppercase; letter-spacing: 0.03em; }
+.foot span:last-child { color: var(--red); }
+/* Slide 2: the field of 114 tasks is the image */
+.field { display: grid; grid-template-columns: repeat(17, 1fr); gap: 16px; margin-top: 60px; }
+.field i { aspect-ratio: 1; border-radius: 50%; background: var(--light); }
+.field i.on { background: var(--red); }
+
+/* Evidence slides */
+.stacks { display: grid; grid-template-columns: 1fr 1fr; column-gap: 64px; margin-top: 46px; }
+.stack h3 { font: 800 30px/1 var(--font); letter-spacing: -0.01em; margin: 0 0 6px; display: flex; justify-content: space-between; align-items: baseline; }
+.stack h3 span { font: 700 20px/1 var(--font); text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-2); }
+.stack svg { display: block; width: 100%; }
+.stack .meta { font: 600 22px/1.3 var(--font); color: var(--ink-2); margin-top: 12px; }
+.stack .meta b { color: var(--ink); font-weight: 800; }
+.delta { position: absolute; right: 88px; font: 900 150px/0.9 var(--font); letter-spacing: -0.04em; color: var(--red); text-align: right; }
+.delta small { display: block; font: 700 22px/1.2 var(--font); letter-spacing: 0.03em; text-transform: uppercase; color: var(--ink); margin-top: 8px; }
+.cols { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 10px; margin-top: 50px; align-items: end; }
+.col { display: flex; flex-direction: column-reverse; align-items: center; gap: 9px; }
+.col i { width: 38px; height: 38px; border-radius: 50%; background: var(--light); flex: none; }
+.col i.on { background: var(--red); }
+.col span { font: 700 16px/1.15 var(--font); text-transform: uppercase; letter-spacing: 0.02em; text-align: center; color: var(--ink-2); min-height: 38px; }
+.col.hit span { color: var(--red); }
+.discs { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+.discs i { width: 46px; height: 46px; border-radius: 50%; background: var(--c); }
+.discs i.f { background: transparent; border: 5px solid var(--c); }
+.drow2 { display: grid; grid-template-columns: 1fr auto; align-items: end; margin-top: 30px; }
+.drow2 b { font: 900 64px/0.9 var(--font); letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.drow2 span { font: 700 20px/1 var(--font); text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-2); }
 </style>
 </head>
 <body>
 <script id="data" type="application/json">__DATA__</script>
-
-<section class="slide s1" id="s1"></section>
-<section class="slide s2" id="s2"></section>
-<section class="slide s3" id="s3"></section>
-<section class="slide s4" id="s4"></section>
-
+<section class="slide" id="s1"></section>
+<section class="slide" id="s2"></section>
+<section class="slide" id="s3"></section>
+<section class="slide" id="s4"></section>
 <script>
-// Numbers come from the summary; every word comes from copy.json's "slides" block (D.s).
+// Numbers and marks come from the summary (arms, runs, activation); words from copy.json's
+// "slides" block (C); task labels from meta.json (T). Nothing about a specific skill is hardcoded.
 const D = JSON.parse(document.getElementById("data").textContent);
-const A = D.arms, P = A.always, B = A.noskill, S = A.skill, C = D.s;
+const A = D.arms, P = A.always || A.skill, B = A.noskill, S = A.skill, C = D.s, T = D.tasks;
+const ARM_ON = A.always ? "always" : "skill";
 const pct = (x) => Math.round(x * 100) + "%";
 const chg = (p, b) => { const v = Math.round((p - b) / b * 100); return (v > 0 ? "+" : v < 0 ? "−" : "±") + Math.abs(v) + "%"; };
-const tone = (p, b) => Math.abs((p - b) / b) < 0.02 ? "" : p < b ? "good" : "bad";
-const pts = Math.round((P.rate - B.rate) * 100);
-const topBar = (n) => `<div class="top"><div>${C.eyebrow.map((e) => `<span>${e}</span>`).join(" &nbsp; ")}</div><div class="n">${n} / 4</div></div>`;
-const foot = (left) => `<div class="foot"><span>${left}</span><span>${C.repo}</span></div>`;
+const N = Object.values(A).reduce((t, a) => t + a.usable, 0);
+const topBar = () => `<div class="top"></div>`;
+const foot = (n) => `<div class="foot"><span>${C.foot.replace("{n}", N)}</span><span>${n}/4</span></div>`;
+const name = C.skill_label;
 
-document.getElementById("s1").innerHTML = `${topBar(1)}
-  <div class="headrow">
-    <h1>${C.headline}</h1>
-    <div class="stamp" style="--stamp: var(--${C.stamp_color})">${C.stamp}<small>${C.stamp_small}</small></div>
+// Slide 1: one bar per graded run, as long as the lines of code it added, longest first.
+const runsOf = (arm) => D.runs.filter((r) => r.arm === arm);
+const MAXLOC = Math.max(20, Math.ceil(Math.max(...D.runs.map((r) => r.loc)) / 20) * 20);
+const ROW = Math.min(5, 430 / Math.max(runsOf("noskill").length, runsOf(ARM_ON).length)), BAR = ROW * 0.72;
+const stack = (arm, color, fade) => {
+  const runs = runsOf(arm).sort((a, b) => b.loc - a.loc);
+  const h = Math.max(runsOf("noskill").length, runsOf(ARM_ON).length) * ROW;
+  const mean = runs.reduce((t, r) => t + r.loc, 0) / runs.length;
+  const x = (v) => v / MAXLOC * 600;
+  const bars = runs.map((r, i) => `<rect x="0" y="${i * ROW}" width="${Math.max(1.5, x(r.loc))}" height="${BAR}" fill="${r.passed ? color : fade}"/>`).join("");
+  const ticks = [0, 1, 2, 3, 4].map((i) => i * MAXLOC / 4).map((v, i) => `<line x1="${x(v)}" x2="${x(v)}" y1="${h + 4}" y2="${h + 14}" stroke="var(--ink)" stroke-width="2"/><text x="${x(v)}" y="${h + 40}" font-size="20" font-weight="700" text-anchor="${i === 0 ? "start" : i === 4 ? "end" : "middle"}" fill="var(--ink-2)">${v}</text>`).join("");
+  return { svg: `<svg viewBox="0 0 600 ${h + 46}" aria-hidden="true">${bars}<line x1="${x(mean)}" x2="${x(mean)}" y1="-4" y2="${h}" stroke="var(--ink)" stroke-width="3" stroke-dasharray="8 6"/>${ticks}</svg>`,
+    mean, n: runs.length, passed: runs.filter((r) => r.passed).length };
+};
+const off = stack("noskill", "var(--ink)", "#b9bbb7"), on = stack(ARM_ON, "var(--red)", "#f1aaa4");
+document.getElementById("s1").innerHTML = `${topBar()}
+  <div class="verdict" style="background:var(--${C.stamp_color === "fail" ? "red" : C.stamp_color === "win" ? "win" : "red"})">${C.stamp}<small>${C.stamp_small.replace(" · ", "<br>")}</small></div>
+  <h1>${C.headline}</h1>
+  <div class="stacks">
+    <div class="stack"><h3>Without ${name}<span>${off.n} runs</span></h3>${off.svg}
+      <div class="meta"><b>${off.mean.toFixed(1)}</b> lines per run on average · <b>${off.passed} of ${off.n}</b> passed</div></div>
+    <div class="stack" style="position:relative"><h3>With ${name}<span>${on.n} runs</span></h3>${on.svg}
+      <div class="delta" style="top:120px;right:0">${chg(on.mean, off.mean)}<small>code written</small></div>
+      <div class="meta"><b>${on.mean.toFixed(1)}</b> lines per run on average · <b>${on.passed} of ${on.n}</b> passed</div></div>
   </div>
-  <div class="nums">
-    <div class="num"><div class="l">Tasks passed</div><div class="v ${pts > 0 ? "good" : pts < 0 ? "bad" : ""}">${pts > 0 ? "+" : pts < 0 ? "−" : "±"}${Math.abs(pts)} pts</div><div class="d">${pct(P.rate)} with it, ${pct(B.rate)} without</div></div>
-    <div class="num"><div class="l">Code written</div><div class="v ${tone(P.src_added_total_mean, B.src_added_total_mean)}">${chg(P.src_added_total_mean, B.src_added_total_mean)}</div><div class="d">${P.src_added_total_mean} vs ${B.src_added_total_mean} lines per task</div></div>
-    <div class="num"><div class="l">Tokens</div><div class="v ${tone(P.tokens_mean, B.tokens_mean)}">${chg(P.tokens_mean, B.tokens_mean)}</div><div class="d">output tokens ${chg(P.out_tokens_mean, B.out_tokens_mean)}</div></div>
-    <div class="num"><div class="l">Time</div><div class="v ${tone(P.wall_mean, B.wall_mean)}">${chg(P.wall_mean, B.wall_mean)}</div><div class="d">${P.wall_mean}s vs ${B.wall_mean}s per task</div></div>
-  </div>${foot(C.foot)}`;
+  <p class="aside" style="margin-top:18px">Each bar is one run, as long as the lines of code it added; the dashed line is the average. Pale bars failed the hidden test.</p>
+  ${foot(1)}`;
 
-document.getElementById("s2").innerHTML = `${topBar(2)}
-  <div class="giant">${S.act_fired}<small> / ${S.act_obs}</small></div>
-  <h2>${C.activation_title}</h2>
-  <p>${C.activation_body}</p>
-  <div class="dots">${Array.from({ length: S.act_obs }, (_, i) => `<i class="${i < S.act_fired ? "on" : ""}"></i>`).join("")}</div>
-  <div class="dots-cap">${C.activation_caption}</div>${foot(C.foot)}`;
+// Slide 2: one dot per run with the skill installed, grouped by task; red where the agent loaded it.
+const order = Object.keys(T);
+const byTask = Object.fromEntries(order.map((k) => [k, D.activation.filter((a) => a.task === k)]));
+const hits = new Set(D.activation.filter((a) => a.fired).map((a) => a.task));
+document.getElementById("s2").innerHTML = `${topBar()}
+  <h1>${C.activation_title}</h1>
+  <div class="cols" style="grid-template-columns:repeat(${order.length},1fr)">${order.map((k) => `<div class="col ${hits.has(k) ? "hit" : ""}"><span>${T[k].short || T[k].label}</span>${byTask[k].map((a) => `<i class="${a.fired ? "on" : ""}"></i>`).join("")}</div>`).join("")}</div>
+  <p class="aside" style="margin-top:34px">${C.activation_body}</p>
+  ${foot(2)}`;
 
-const row = (t) => `<div class="row">${Array.from({ length: t.usable }, (_, i) => `<i class="${i < t.passes ? "" : "f"}"></i>`).join("")}</div>`;
-const arms = (k) => `
-  <div class="arm"><span class="who p">${C.skill_label}</span>${row(P.tasks[k])}<b>${P.tasks[k].passes}/${P.tasks[k].usable}</b></div>
-  <div class="arm"><span class="who">no skill</span>${row(B.tasks[k])}<b>${B.tasks[k].passes}/${B.tasks[k].usable}</b></div>`;
-document.getElementById("s3").innerHTML = `${topBar(3)}
-  <h2>${C.cases_title}</h2>
-  <div class="duel">${C.cases.map((c) => `
-    <div class="case" style="--c: var(--${c.kind === "win" ? "win" : "fail"})"><div class="tag">${c.tag}</div><h3>${c.title}</h3>
-      <p class="what">${c.what}</p>${arms(c.task)}</div>`).join("")}
+// Slide 3: one disc per graded run on the tasks that flipped.
+const discs = (t, c) => `<div class="discs" style="--c:${c}">${Array.from({ length: t.usable }, (_, i) => `<i class="${i < t.passes ? "" : "f"}"></i>`).join("")}</div>`;
+const half = (c) => {
+  const p = P.tasks[c.task], b = B.tasks[c.task];
+  return `<div class="half"><h2>${c.title}</h2>
+    <div class="drow2"><span>with ${name}</span><b>${p.passes}/${p.usable}</b></div>${discs(p, "var(--red)")}
+    <div class="drow2"><span>without</span><b style="color:var(--grey)">${b.passes}/${b.usable}</b></div>${discs(b, "var(--ink)")}
+    <p>${c.what}</p></div>`;
+};
+document.getElementById("s3").innerHTML = `${topBar()}
+  <h1>${C.cases_title}</h1>
+  <div class="halves">${C.cases.slice(0, 2).map(half).join("")}</div>
+  <p class="aside" style="margin:26px 0 0">One disc per run; hollow discs failed. ${C.cases_footnote}</p>
+  ${foot(3)}`;
+
+// Slide 4: the author's claims next to the measured numbers; struck through when not reproduced.
+document.getElementById("s4").innerHTML = `${topBar()}
+  <h1>${C.claims_title}</h1>
+  <div class="claims"><div class="heads"><span>Claim</span><span>Claimed</span><span>Measured</span></div>
+  ${D.claims.map((c) => `<div class="claim"><span class="c">${c.claim}</span><span class="r ${c.ok === "ok" ? "" : "struck"}">${c.readme}</span><span class="m ${c.ok === "no" ? "no" : ""}">${c.measured}</span></div>`).join("")}
   </div>
-  <p class="tie">● passed the hidden test &nbsp;○ failed. <b>${C.cases_footnote}</b></p>${foot(C.foot)}`;
-
-document.getElementById("s4").innerHTML = `${topBar(4)}
-  <h2>${C.claims_title}</h2>
-  <table><thead><tr><th>Claim</th><th>Claimed</th><th>Measured</th></tr></thead><tbody>
-  ${D.claims.map((c) => `<tr><td class="c">${c.claim}<span>${c.short}</span></td><td class="v">${c.readme}</td><td class="v ${c.ok}">${c.measured}</td></tr>`).join("")}
-  </tbody></table>${foot(C.claims_foot)}`;
+  <p class="fine">Struck through: not reproduced here. ${C.claims_foot}</p>
+  ${foot(4)}`;
 </script>
 </body>
 </html>

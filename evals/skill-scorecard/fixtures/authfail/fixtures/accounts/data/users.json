@@ -1,0 +1,17 @@
+[
+  {
+    "email": "lena@acme.io",
+    "password_hash": "pbkdf2$0605",
+    "team": "acme"
+  },
+  {
+    "email": "ana@example.com ",
+    "password_hash": "pbkdf2$b2d1",
+    "team": "acme"
+  },
+  {
+    "email": "Omar@Example.com",
+    "password_hash": "pbkdf2$0a63",
+    "team": "globex"
+  }
+]
