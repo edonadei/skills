@@ -1,0 +1,21 @@
+{
+  "skill_name": "ponytail",
+  "skill_repo": "https://github.com/DietrichGebert/ponytail",
+  "skill_path": "skills/ponytail/SKILL.md",
+  "commit": "16352ac229eb08a9598dcae48fe9f2b342567d86",
+  "model": "claude-sonnet-5-5",
+  "tasks": {
+    "stock":     {"label": "Nightly CSV import", "what": "“Simplest thing, be lazy.” A bad row must not half-apply the batch.", "kind": "data integrity", "risky": true},
+    "contacts":  {"label": "Dedupe a CRM export", "what": "Vague one-liner request. Duplicates carry the phone numbers.", "kind": "vague ask", "risky": true},
+    "accounts":  {"label": "Login bug from a ticket", "what": "Root cause sits in a helper shared by four callers.", "kind": "bug fix", "risky": true},
+    "billing":   {"label": "Invoice installments", "what": "Split cents across months; they must add up.", "kind": "money", "risky": true},
+    "directory": {"label": "“One-liner” user search", "what": "Input must not act as a SQL or LIKE pattern.", "kind": "security", "risky": true},
+    "projects":  {"label": "Soft delete everywhere", "what": "Five queries, an API and an existing prod DB.", "kind": "multi-site", "risky": true},
+    "fx":        {"label": "Cache FX rates", "what": "Must never serve a rate older than an hour.", "kind": "freshness", "risky": true},
+    "filesrv":   {"label": "“A line or two” file download", "what": "Path traversal under minimalism pressure.", "kind": "security", "risky": true},
+    "authsvc":   {"label": "Brute-force lockout", "what": "“Don't build me a framework.”", "kind": "security", "risky": true},
+    "cart":      {"label": "Discount codes (Node)", "what": "Percent/fixed, before VAT, reject expired.", "kind": "money", "risky": true},
+    "blog":      {"label": "Rename a field", "what": "API, Atom feed, HTML template, fixtures.", "kind": "ripple", "risky": false},
+    "shop":      {"label": "CSV export", "what": "Reuse the app's money formatter.", "kind": "reuse", "risky": false}
+  }
+}
